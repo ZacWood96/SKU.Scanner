@@ -245,7 +245,7 @@
                         <div class="w-3/4 h-24 border-2 border-dashed border-emerald-400 rounded-lg animate-pulse"></div>
                     </div>
                     <div class="absolute bottom-3 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg">
-                        Align Code 128 Auto Barcode within frame
+                        Align Barcode within frame
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
             <!-- Cycle Count Database Upload -->
             <div class="pt-4 border-t border-slate-100 space-y-3">
                 <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">2. Cycle Count Inventory Spreadsheet</h4>
-                <p class="text-xs text-slate-500">Upload the physical inventory spreadsheet with columns titled <strong>variant number</strong> and <strong>physical inventory</strong>.</p>
+                <p class="text-xs font-slate-500">Upload the physical inventory spreadsheet with columns titled <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>item group</strong>, and description columns.</p>
                 <div class="flex items-center gap-3">
                     <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
                         <i class="fa-solid fa-file-excel"></i>
@@ -338,26 +338,72 @@
                     <span class="italic text-slate-400">No cycle count spreadsheet loaded yet.</span>
                 </div>
             </div>
+        <!-- Cycle List Table Container -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
+                    <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
+                </div>
+                <div id="cycle-active-category-badge" class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">All Categories</div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100/70 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-3">Variant Number (SKU)</th>
+                            <th class="p-3">Item Description</th>
+                            <th class="p-3 text-right">Expected Physical Inventory</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cycle-table-body" class="divide-y divide-slate-100">
+                        <tr>
+                            <td colspan="3" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file in settings.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-            <div class="pt-4 border-t border-slate-100 space-y-4">
-                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tax & System Options</h4>
+    <!-- Category Selection Modal for Cycle Count -->
+    <div id="cycle-category-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                    <i class="fa-solid fa-filter"></i>
+                </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Default Sales Tax Percentage (%)</label>
-                    <div class="flex items-center space-x-3">
-                        <input type="number" step="0.01" id="tax-rate-input" value="7" onchange="updateTaxRate(this.value)" class="w-32 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
-                        <span class="text-xs text-slate-500">Default is 7%. Used for customer out-the-door calculations.</span>
-                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Select Cycle Count Category</h3>
+                    <p class="text-xs text-slate-500">Choose which item group to load to optimize and filter your count.</p>
                 </div>
+            </div>
 
-                <div class="pt-2">
-                    <label class="flex items-center justify-between cursor-pointer select-none">
-                        <div>
-                            <span class="block text-xs font-semibold text-slate-700">Tax Coverage Contracts (SoundCare / IMA)</span>
-                            <span class="text-xs text-slate-500 mt-0.5 block">Enable if operating in a state where extended service contracts are subject to sales tax.</span>
-                        </div>
-                        <input type="checkbox" id="tax-coverage-checkbox" onchange="updateTaxCoverageSetting(this.checked)" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                    </label>
-                </div>
+            <div class="space-y-2 pt-2">
+                <button type="button" onclick="confirmCategorySelection('BO Instr')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Instruments (BO Instr)</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                </button>
+                <button type="button" onclick="confirmCategorySelection('BO Acces')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Accessories (BO Acces)</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                </button>
+                <button type="button" onclick="confirmCategorySelection('Combo Inst')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Instruments (Combo Inst)</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                </button>
+                <button type="button" onclick="confirmCategorySelection('Combo Acc')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Accessories (Combo Acc)</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                </button>
+                <button type="button" onclick="confirmCategorySelection('Print')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Print</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                </button>
+                <button type="button" onclick="confirmCategorySelection('ALL')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-between group">
+                    <span class="text-xs font-semibold text-slate-600 group-hover:text-slate-900">All Categories (No Filter)</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -382,10 +428,10 @@
         let currentFinancingMonths = 6; // 6, 24, or 36
 
         // Cycle Count state variables
-        let cycleInventoryData = []; // Array of { sku, desc, expectedQty }
+        let cycleInventoryData = []; // Array of { sku, desc, expectedQty, group }
+        let rawCycleParsedRows = []; // Temporarily hold parsed rows awaiting category selection
         let pendingCycleSku = null;
-
-        // Tab Navigation Controller
+        let activeCycleCategoryFilter = 'ALL';
         function switchTab(tabId) {
             ['scanner', 'cycle', 'settings'].forEach(t => {
                 let tabEl = document.getElementById(`tab-${t}`);
@@ -539,7 +585,7 @@
                     const worksheet = workbook.Sheets[firstSheetName];
                     const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
-                    parseCycleRows(jsonRows, file.name);
+                    preprocessCycleRows(jsonRows, file.name);
                 } catch (err) {
                     console.error(err);
                     alertBox(`Failed to parse cycle file: ${file.name}`, "Parse Error", true);
@@ -548,60 +594,74 @@
             reader.readAsArrayBuffer(file);
         }
 
-        function parseCycleRows(rows, filename) {
+        function preprocessCycleRows(rows, filename) {
             if (!rows || rows.length === 0) return;
             let sampleRow = rows[0];
             let keys = Object.keys(sampleRow);
 
-            let skuKey = keys.find(k => ['variant number', 'sku', 'item'].includes(k.trim().toLowerCase()));
-            let qtyKey = keys.find(k => ['physical inventory', 'inventory', 'qty', 'quantity', 'expected'].includes(k.trim().toLowerCase()));
+            let skuKey = keys.find(k => k.trim().toLowerCase() === 'variant number');
+            let qtyKey = keys.find(k => k.trim().toLowerCase() === 'physical inventory');
+            let groupKey = keys.find(k => k.trim().toLowerCase() === 'item group');
             
             let brandKey = keys.find(k => ['brand name', 'brand'].includes(k.trim().toLowerCase()));
-            let prodKey = keys.find(k => ['product name', 'product', 'title', 'description', 'prod desc'].includes(k.trim().toLowerCase()));
-            let descKey = keys.find(k => ['description', 'prod desc', 'item description', 'title'].includes(k.trim().toLowerCase()));
+            let prodKey = keys.find(k => ['product name', 'product'].includes(k.trim().toLowerCase()));
 
             if (!skuKey || !qtyKey) {
                 alertBox("Could not find 'variant number' and 'physical inventory' columns in the uploaded file.", "Format Error", true);
                 return;
             }
 
-            cycleInventoryData = [];
+            rawCycleParsedRows = [];
             rows.forEach(row => {
                 let skuVal = String(row[skuKey]).trim();
                 if (!skuVal) return;
                 let qtyVal = parseFloat(row[qtyKey]);
                 if (isNaN(qtyVal)) qtyVal = 0;
 
+                let groupVal = groupKey ? String(row[groupKey]).trim() : "";
+
+                let brand = brandKey ? String(row[brandKey]).trim() : "";
+                let prod = prodKey ? String(row[prodKey]).trim() : "";
                 let descVal = "";
-                if (brandKey && prodKey) {
-                    let brand = String(row[brandKey]).trim();
-                    let prod = String(row[prodKey]).trim();
-                    if (brand && prod) {
-                        descVal = `${brand}, ${prod}`;
-                    } else if (brand || prod) {
-                        descVal = brand || prod;
-                    }
+                if (brand && prod) {
+                    descVal = `${brand}, ${prod}`;
+                } else if (brand || prod) {
+                    descVal = brand || prod;
+                } else {
+                    descVal = "No description";
                 }
 
-                if (!descVal && descKey) {
-                    descVal = String(row[descKey]).trim();
-                }
-
-                if (!descVal && productDatabase[skuVal]) {
-                    descVal = productDatabase[skuVal].desc;
-                }
-                if (!descVal) descVal = "No description";
-
-                cycleInventoryData.push({
+                rawCycleParsedRows.push({
                     sku: skuVal,
                     desc: descVal,
-                    expectedQty: qtyVal
+                    expectedQty: qtyVal,
+                    group: groupVal
                 });
             });
 
-            document.getElementById('cycle-loaded-file-info').innerHTML = `<span class="font-semibold text-slate-800"><i class="fa-solid fa-file-excel text-emerald-600 mr-1.5"></i>${escapeHtml(filename)}</span> loaded successfully (${cycleInventoryData.length} items).`;
+            // Show category selection modal immediately
+            document.getElementById('cycle-category-modal').classList.remove('hidden');
+        }
+
+        function confirmCategorySelection(category) {
+            activeCycleCategoryFilter = category;
+            document.getElementById('cycle-category-modal').classList.add('hidden');
+
+            // Filter out irrelevant columns (ignored completely) and filter rows by category if specified
+            cycleInventoryData = rawCycleParsedRows.filter(item => {
+                if (category === 'ALL') return true;
+                return item.group.toLowerCase() === category.toLowerCase();
+            });
+
+            // Clean up raw cache to free memory
+            rawCycleParsedRows = [];
+
+            let catLabel = category === 'ALL' ? 'All Categories' : category;
+            document.getElementById('cycle-active-category-badge').innerText = catLabel;
+            document.getElementById('cycle-loaded-file-info').innerHTML = `<span class="font-semibold text-slate-800"><i class="fa-solid fa-file-excel text-emerald-600 mr-1.5"></i>Loaded (${cycleInventoryData.length} items, Category: ${catLabel})</span>`;
+            
             renderCycleTable();
-            alertBox(`Loaded ${cycleInventoryData.length} cycle count items successfully!`, "Cycle Inventory Ready");
+            alertBox(`Successfully loaded ${cycleInventoryData.length} cycle count items for category: ${catLabel}!`, "Cycle Inventory Ready");
         }
 
         function renderCycleTable() {
