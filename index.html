@@ -194,219 +194,211 @@
             </div>
 
             <!-- Quick Database Status Banner -->
-        <div id="scanner-db-status" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
-                <span id="db-status-text">No price tag spreadsheet loaded yet. Please upload your price files in Settings.</span>
-            </div>
-            <button onclick="switchTab('settings')" class="font-bold underline hover:text-amber-900">Settings</button>
-        </div>
-
-    </div>
-
-    <!-- TAB 2: CYCLE COUNT MODE -->
-    <div id="tab-cycle" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900">Physical Inventory Cycle Count</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs to automatically deduct expected inventory items.</p>
-                </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button onclick="exportUnscannedExcel()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-file-excel"></i>
-                        <span>Export Remaining (.XLS)</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Cycle Count Input & Scanner Bar -->
-            <div class="pt-3 border-t border-slate-100">
-                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Scan or Type SKU for Cycle Count</label>
-                <div class="flex gap-2">
-                    <div class="relative flex-1">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                            <i class="fa-solid fa-barcode"></i>
-                        </span>
-                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to deduct" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
-                    </div>
-                    <button onclick="submitCycleManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
-                        <span>Deduct</span>
-                    </button>
-                    <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-camera text-base"></i>
-                    </button>
-                </div>
-
-                <!-- Cycle Camera Stream Viewport Container -->
-                <div id="cycle-camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
-                    <div id="cycle-interactive" class="viewport w-full h-full relative"></div>
-                    <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
-                        <div class="w-3/4 h-24 border-2 border-dashed border-emerald-400 rounded-lg animate-pulse"></div>
-                    </div>
-                    <div class="absolute bottom-3 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg">
-                        Align Barcode within frame
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quantity Prompt Modal / Bar -->
-        <div id="cycle-qty-modal" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
-                    <i class="fa-solid fa-box"></i>
-                </div>
-                <div>
-                    <h4 id="cycle-prompt-sku" class="text-sm font-bold text-slate-900 font-mono"></h4>
-                    <p id="cycle-prompt-desc" class="text-xs text-slate-600"></p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2 w-full sm:w-auto">
-                <div class="flex-1 sm:flex-none">
-                    <label class="block text-[10px] font-bold text-emerald-800 uppercase tracking-wider mb-1">Qty to Remove</label>
-                    <input type="number" id="cycle-deduct-qty" min="1" value="1" class="w-24 px-3 py-1.5 bg-white border border-emerald-300 rounded-xl text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-                <div class="flex items-end space-x-1 pt-5">
-                    <button onclick="confirmCycleDeduction()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-1.5 rounded-xl text-xs transition-all shadow-sm">Confirm</button>
-                    <button onclick="cancelCycleDeduction()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-1.5 rounded-xl text-xs transition-all">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cycle List Table Container -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div id="scanner-db-status" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
-                    <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
+                    <span id="db-status-text">No price tag spreadsheet loaded yet. Please upload your price files in Settings.</span>
                 </div>
-                <div class="text-xs text-slate-500">Showing items with expected physical inventory > 0</div>
+                <button onclick="switchTab('settings')" class="font-bold underline hover:text-amber-900">Settings</button>
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-100/70 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
-                            <th class="p-3">Variant Number (SKU)</th>
-                            <th class="p-3">Item Description</th>
-                            <th class="p-3 text-right">Expected Physical Inventory</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cycle-table-body" class="divide-y divide-slate-100">
-                        <tr>
-                            <td colspan="3" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file below.</td>
-                        </tr>
-                    </tbody>
-                </table>
+
+        </div>
+
+        <!-- TAB 2: CYCLE COUNT MODE -->
+        <div id="tab-cycle" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Physical Inventory Cycle Count</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs to automatically deduct expected inventory items.</p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button onclick="exportUnscannedExcel()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span>Export Remaining (.XLS)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cycle Count Input & Scanner Bar -->
+                <div class="pt-3 border-t border-slate-100">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Scan or Type SKU for Cycle Count</label>
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-barcode"></i>
+                            </span>
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to deduct" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                        </div>
+                        <button onclick="submitCycleManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
+                            <span>Deduct</span>
+                        </button>
+                        <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-camera text-base"></i>
+                        </button>
+                    </div>
+
+                    <!-- Cycle Camera Stream Viewport Container -->
+                    <div id="cycle-camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
+                        <div id="cycle-interactive" class="viewport w-full h-full relative"></div>
+                        <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
+                            <div class="w-3/4 h-24 border-2 border-dashed border-emerald-400 rounded-lg animate-pulse"></div>
+                        </div>
+                        <div class="absolute bottom-3 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg">
+                            Align Barcode within frame
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantity Prompt Modal / Bar -->
+            <div id="cycle-qty-modal" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+                    <div>
+                        <h4 id="cycle-prompt-sku" class="text-sm font-bold text-slate-900 font-mono"></h4>
+                        <p id="cycle-prompt-desc" class="text-xs text-slate-600"></p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <div class="flex-1 sm:flex-none">
+                        <label class="block text-[10px] font-bold text-emerald-800 uppercase tracking-wider mb-1">Qty to Remove</label>
+                        <input type="number" id="cycle-deduct-qty" min="1" value="1" class="w-24 px-3 py-1.5 bg-white border border-emerald-300 rounded-xl text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div class="flex items-end space-x-1 pt-5">
+                        <button onclick="confirmCycleDeduction()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-1.5 rounded-xl text-xs transition-all shadow-sm">Confirm</button>
+                        <button onclick="cancelCycleDeduction()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-1.5 rounded-xl text-xs transition-all">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cycle List Table Container -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
+                        <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
+                    </div>
+                    <div id="cycle-active-category-badge" class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">All Categories</div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100/70 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-3">Variant Number (SKU)</th>
+                                <th class="p-3">Item Description</th>
+                                <th class="p-3 text-right">Expected Physical Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cycle-table-body" class="divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="3" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file in settings.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- TAB 3: SETTINGS -->
-    <div id="tab-settings" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
-            <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Application & Database Settings</h3>
-            
-            <!-- Price Tag Database Upload -->
-            <div class="space-y-3">
-                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">1. Price Tag Spreadsheets</h4>
-                <p class="text-xs text-slate-500">Upload your price tag CSV or Excel files containing SKU, product description, selling price, and StorEDLP columns.</p>
-                <div class="flex items-center gap-3">
-                    <label class="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center space-x-2">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Upload Price Files</span>
-                        <input type="file" id="excel-file-input" multiple accept=".xlsx, .xls, .csv" onchange="handleFileSelect(event)" class="hidden">
-                    </label>
+        <!-- TAB 3: SETTINGS -->
+        <div id="tab-settings" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Application & Database Settings</h3>
+                
+                <!-- State Tax Rate & Coverage Taxability Settings -->
+                <div class="space-y-4 pb-4 border-b border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">State Tax & Coverage Tax Settings</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">State Tax Rate (%)</label>
+                            <input type="number" step="0.1" id="tax-rate-input" value="7.0" onchange="updateTaxRate(this.value)" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                        <div class="flex items-center pt-5">
+                            <label class="flex items-center space-x-3 cursor-pointer select-none">
+                                <input type="checkbox" id="chk-tax-coverage" onchange="updateTaxCoverageSetting(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <span class="text-xs font-semibold text-slate-800">Taxable IMA/SoundCare  (check if your store/state applies tax to coverage plans)</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div id="loaded-files-list" class="divide-y divide-slate-100 text-xs mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <div class="py-1 text-slate-400 italic">No price spreadsheets uploaded in this session yet.</div>
-                </div>
-            </div>
 
-            <!-- Cycle Count Database Upload -->
-            <div class="pt-4 border-t border-slate-100 space-y-3">
-                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">2. Cycle Count Inventory Spreadsheet</h4>
-                <p class="text-xs font-slate-500">Upload the physical inventory spreadsheet with columns titled <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>item group</strong>, and description columns.</p>
-                <div class="flex items-center gap-3">
-                    <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
-                        <i class="fa-solid fa-file-excel"></i>
-                        <span>Upload Cycle Count File</span>
-                        <input type="file" id="cycle-file-input" accept=".xlsx, .xls, .csv" onchange="handleCycleFileSelect(event)" class="hidden">
-                    </label>
+                <!-- Price Tag Database Upload -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Price Tag Spreadsheets</h4>
+                    <p class="text-xs text-slate-500">Upload your price tag CSV or Excel files containing SKU, product description, selling price, and StorEDLP columns.</p>
+                    <div class="flex items-center gap-3">
+                        <label class="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Upload Price Files</span>
+                            <input type="file" id="excel-file-input" multiple accept=".xlsx, .xls, .csv" onchange="handleFileSelect(event)" class="hidden">
+                        </label>
+                    </div>
+                    <div id="loaded-files-list" class="divide-y divide-slate-100 text-xs mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div class="py-1 text-slate-400 italic">No price spreadsheets uploaded in this session yet.</div>
+                    </div>
                 </div>
-                <div id="cycle-loaded-file-info" class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span class="italic text-slate-400">No cycle count spreadsheet loaded yet.</span>
+
+                <!-- Cycle Count Database Upload -->
+                <div class="pt-4 border-t border-slate-100 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Cycle Count Inventory Spreadsheet</h4>
+                    <p class="text-xs text-slate-500">Upload the physical inventory spreadsheet with columns titled <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>brand name</strong>, and <strong>product name</strong>.</p>
+                    <div class="flex items-center gap-3">
+                        <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span>Upload Cycle Count File</span>
+                            <input type="file" id="cycle-file-input" accept=".xlsx, .xls, .csv" onchange="handleCycleFileSelect(event)" class="hidden">
+                        </label>
+                    </div>
+                    <div id="cycle-loaded-file-info" class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="italic text-slate-400">No cycle count spreadsheet loaded yet.</span>
+                    </div>
                 </div>
-            </div>
-        <!-- Cycle List Table Container -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <div class="flex items-center space-x-2">
-                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
-                    <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
-                </div>
-                <div id="cycle-active-category-badge" class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">All Categories</div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-100/70 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
-                            <th class="p-3">Variant Number (SKU)</th>
-                            <th class="p-3">Item Description</th>
-                            <th class="p-3 text-right">Expected Physical Inventory</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cycle-table-body" class="divide-y divide-slate-100">
-                        <tr>
-                            <td colspan="3" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file in settings.</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
-    </div>
 
-    <!-- Category Selection Modal for Cycle Count -->
-    <div id="cycle-category-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
-                    <i class="fa-solid fa-filter"></i>
+        <!-- Category Selection Modal for Cycle Count -->
+        <div id="cycle-category-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Select Cycle Count Category</h3>
+                        <p class="text-xs text-slate-500">Choose which item group to load to optimize and filter your count.</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-base font-bold text-slate-900">Select Cycle Count Category</h3>
-                    <p class="text-xs text-slate-500">Choose which item group to load to optimize and filter your count.</p>
-                </div>
-            </div>
 
-            <div class="space-y-2 pt-2">
-                <button type="button" onclick="confirmCategorySelection('BO Instr')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Instruments (BO Instr)</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
-                </button>
-                <button type="button" onclick="confirmCategorySelection('BO Acces')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Accessories (BO Acces)</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
-                </button>
-                <button type="button" onclick="confirmCategorySelection('Combo Inst')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Instruments (Combo Inst)</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
-                </button>
-                <button type="button" onclick="confirmCategorySelection('Combo Acc')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Accessories (Combo Acc)</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
-                </button>
-                <button type="button" onclick="confirmCategorySelection('Print')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Print</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
-                </button>
-                <button type="button" onclick="confirmCategorySelection('ALL')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-between group">
-                    <span class="text-xs font-semibold text-slate-600 group-hover:text-slate-900">All Categories (No Filter)</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
-                </button>
+                <div class="space-y-2 pt-2">
+                    <button type="button" onclick="confirmCategorySelection('BO Instr')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Instruments (BO Instr)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    </button>
+                    <button type="button" onclick="confirmCategorySelection('BO Acces')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Accessories (BO Acces)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    </button>
+                    <button type="button" onclick="confirmCategorySelection('Combo Inst')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Instruments (Combo Inst)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    </button>
+                    <button type="button" onclick="confirmCategorySelection('Combo Acc')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Accessories (Combo Acc)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    </button>
+                    <button type="button" onclick="confirmCategorySelection('Print')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Print</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    </button>
+                    <button type="button" onclick="confirmCategorySelection('ALL')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-600 group-hover:text-slate-900">All Categories (No Filter)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
     </main>
 
@@ -432,6 +424,7 @@
         let rawCycleParsedRows = []; // Temporarily hold parsed rows awaiting category selection
         let pendingCycleSku = null;
         let activeCycleCategoryFilter = 'ALL';
+
         function switchTab(tabId) {
             ['scanner', 'cycle', 'settings'].forEach(t => {
                 let tabEl = document.getElementById(`tab-${t}`);
@@ -647,13 +640,11 @@
             activeCycleCategoryFilter = category;
             document.getElementById('cycle-category-modal').classList.add('hidden');
 
-            // Filter out irrelevant columns (ignored completely) and filter rows by category if specified
             cycleInventoryData = rawCycleParsedRows.filter(item => {
                 if (category === 'ALL') return true;
                 return item.group.toLowerCase() === category.toLowerCase();
             });
 
-            // Clean up raw cache to free memory
             rawCycleParsedRows = [];
 
             let catLabel = category === 'ALL' ? 'All Categories' : category;
@@ -702,7 +693,6 @@
             processScannedCycleSku(val);
         }
 
-        // Cycle Camera Scanner (QuaggaJS)
         function toggleCycleCamera() {
             if (isCycleCameraActive) {
                 stopCycleCamera();
@@ -851,7 +841,7 @@
             
             if (Object.keys(productDatabase).length === 0) {
                 alertBox("Please upload your price tag files first.", "Database Empty", true);
-                switchTab('spreadsheet');
+                switchTab('settings');
                 return;
             }
 
@@ -920,7 +910,6 @@
                     customerOptions.classList.add('hidden');
                 } else {
                     customerOptions.classList.remove('hidden');
-                    // Reset add-ons state
                     document.getElementById('chk-discount').checked = false;
                     document.getElementById('discount-slider-container').classList.add('hidden');
                     document.getElementById('chk-soundcare').checked = false;
@@ -995,7 +984,7 @@
                     },
                 },
                 decoder: {
-                    readers: ["code_128_reader"] // Locked to Code 128 Auto
+                    readers: ["code_128_reader"]
                 }
             }, function(err) {
                 if (err) {
@@ -1084,7 +1073,6 @@
             });
         }
 
-        // Soundcare Tier Calculation Functions
         function getSoundcareCost(price, term) {
             if (term === 'ima') return 189.99;
             
@@ -1108,14 +1096,14 @@
                 if (price <= 1499.99) return 149.99;
                 if (price <= 1999.99) return 179.99;
                 if (price <= 2999.99) return 219.99;
-                if (price <= 399.99) return 299.99;
+                if (price <= 3999.99) return 299.99;
                 if (price <= 4999.99) return 399.99;
                 if (price <= 7499.99) return 549.99;
                 if (price <= 14999.99) return 999.99;
                 if (price <= 24999.99) return 1499.99;
                 if (price <= 37499.99) return 1999.99;
                 if (price <= 50000) return 2799.99;
-                return 0; // > 50,000 does not qualify
+                return 0;
             }
 
             if (term === 3) {
@@ -1162,13 +1150,12 @@
                 if (price <= 4999.99) return 1149.99;
                 if (price <= 7499.99) return 1599.99;
                 if (price <= 75000) return 1599.99; 
-                return 0; // > 75,000 does not qualify for 5 year
+                return 0;
             }
 
             return 0;
         }
 
-        // Financing Widget Controller
         function toggleFinancingWidget() {
             const useFinancing = document.getElementById('chk-financing').checked;
             const container = document.getElementById('financing-term-container');
