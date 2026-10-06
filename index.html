@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Tag Checker</title>
+    <title>SKU Scanner</title>
     <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for professional icons -->
@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- QuaggaJS for Code 128 Auto barcode scanning -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <!-- jsPDF for professional PDF Quote generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
@@ -40,17 +42,17 @@
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
-                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm">
+                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm">
                     <i class="fa-solid fa-camera"></i>
-                    <span class="hidden xs:inline sm:inline">Scanner</span>
+                    <span class="inline">Scanner</span>
                 </button>
-                <button id="nav-cycle" onclick="switchTab('cycle')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
+                <button id="nav-cycle" onclick="switchTab('cycle')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-clipboard-check"></i>
-                    <span class="hidden xs:inline sm:inline">Cycle Count</span>
+                    <span class="inline">Cycle</span>
                 </button>
-                <button id="nav-settings" onclick="switchTab('settings')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
+                <button id="nav-settings" onclick="switchTab('settings')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-gear"></i>
-                    <span class="hidden xs:inline sm:inline">Settings</span>
+                    <span class="inline">Settings</span>
                 </button>
             </div>
         </div>
@@ -58,7 +60,6 @@
 
     <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6">
 
-        <!-- Custom Notification Message Box (Replaces alert()) -->
         <div id="custom-alert" class="hidden mb-6 p-4 rounded-xl border flex items-start space-x-3 transition-all animate-fade-in shadow-sm">
             <div id="alert-icon-container" class="mt-0.5 text-lg"></div>
             <div class="flex-1">
@@ -83,12 +84,11 @@
                     <button onclick="submitManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
                         <span>Search</span>
                     </button>
-                    <button id="toggle-camera-btn" onclick="toggleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
+                    <button id="toggle-camera-btn" onclick="toggleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-camera text-base"></i>
                     </button>
                 </div>
 
-                <!-- Camera Stream Viewport Container -->
                 <div id="camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
                     <div id="interactive" class="viewport w-full h-full relative"></div>
                     <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
@@ -112,15 +112,13 @@
                     <span class="font-semibold text-slate-700">Description:</span> <span id="res-desc"></span>
                 </div>
 
-                <!-- Dynamic Pricing Grid (Clickable Sell vs StorEDLP) -->
                 <div id="res-prices-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100">
-                    <!-- Populated dynamically via JS -->
+                    <!-- Dynamic pricing cards -->
                 </div>
 
                 <div id="res-customer-options" class="mt-5 pt-5 border-t border-slate-100 space-y-4">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Customer Options & Add-ons</h4>
 
-                    <!-- 1. Variable Discount Checkbox & Slider Widget -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
@@ -139,7 +137,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Coverage Widget (SoundCare 2, 3, 5 Year & 2-Year IMA) -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
@@ -160,7 +157,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. Financing Widget -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
@@ -172,18 +168,17 @@
                         <div id="financing-term-container" class="hidden mt-3 pt-3 border-t border-slate-200 space-y-2">
                             <span id="financing-info-text" class="text-xs font-medium text-slate-500 block">Select available installment plan:</span>
                             <div id="financing-buttons-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                <!-- Populated dynamically based on ticket thresholds -->
+                                <!-- Dynamic installment buttons -->
                             </div>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Out-The-Door Total Card -->
                 <div class="mt-5 bg-emerald-900 text-white p-5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div>
                         <span class="text-xs uppercase font-bold tracking-wider text-emerald-300">Out-The-Door Total</span>
-                        <div id="breakdown-tax-label" class="text-xs text-emerald-200 mt-0.5">Includes 7% Tax</div>
+                        <div id="breakdown-tax-label" class="text-xs text-emerald-200 mt-0.5">Includes Tax</div>
                     </div>
                     <div class="text-right">
                         <div id="res-final-total" class="text-3xl font-extrabold text-white tracking-tight">$0.00</div>
@@ -191,9 +186,16 @@
                     </div>
                 </div>
 
+                <!-- Generate Quote Button -->
+                <div class="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+                    <button onclick="openQuoteModal()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-file-pdf text-emerald-400"></i>
+                        <span>Generate Quote</span>
+                    </button>
+                </div>
+
             </div>
 
-            <!-- Quick Database Status Banner -->
             <div id="scanner-db-status" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
@@ -204,13 +206,13 @@
 
         </div>
 
-        <!-- TAB 2: CYCLE COUNT MODE -->
+        <!-- TAB 2: CYCLE COUNT -->
         <div id="tab-cycle" class="hidden space-y-6">
             <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <h3 class="text-base font-bold text-slate-900">Physical Inventory Cycle Count</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs to automatically deduct expected inventory items.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs to deduct expected inventory items.</p>
                     </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto">
                         <button onclick="exportUnscannedExcel()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center space-x-2">
@@ -220,7 +222,6 @@
                     </div>
                 </div>
 
-                <!-- Cycle Count Input & Scanner Bar -->
                 <div class="pt-3 border-t border-slate-100">
                     <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Scan or Type SKU for Cycle Count</label>
                     <div class="flex gap-2">
@@ -233,12 +234,11 @@
                         <button onclick="submitCycleManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
                             <span>Deduct</span>
                         </button>
-                        <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
+                        <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-camera text-base"></i>
                         </button>
                     </div>
 
-                    <!-- Cycle Camera Stream Viewport Container -->
                     <div id="cycle-camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
                         <div id="cycle-interactive" class="viewport w-full h-full relative"></div>
                         <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
@@ -251,7 +251,6 @@
                 </div>
             </div>
 
-            <!-- Quantity Prompt Modal / Bar -->
             <div id="cycle-qty-modal" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
@@ -274,7 +273,6 @@
                 </div>
             </div>
 
-            <!-- Cycle List Table Container -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                     <div class="flex items-center space-x-2">
@@ -307,7 +305,6 @@
             <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
                 <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Application & Database Settings</h3>
                 
-                <!-- State Tax Rate & Coverage Taxability Settings -->
                 <div class="space-y-4 pb-4 border-b border-slate-100">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">State Tax & Coverage Tax Settings</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -318,13 +315,12 @@
                         <div class="flex items-center pt-5">
                             <label class="flex items-center space-x-3 cursor-pointer select-none">
                                 <input type="checkbox" id="chk-tax-coverage" onchange="updateTaxCoverageSetting(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                                <span class="text-xs font-semibold text-slate-800">Taxable IMA/SoundCare  (check if your store/state applies tax to coverage plans)</span>
+                                <span class="text-xs font-semibold text-slate-800">Tax Coverage Contracts (SoundCare / IMA)</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Price Tag Database Upload -->
                 <div class="space-y-3">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Price Tag Spreadsheets</h4>
                     <p class="text-xs text-slate-500">Upload your price tag CSV or Excel files containing SKU, product description, selling price, and StorEDLP columns.</p>
@@ -340,10 +336,9 @@
                     </div>
                 </div>
 
-                <!-- Cycle Count Database Upload -->
                 <div class="pt-4 border-t border-slate-100 space-y-3">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Cycle Count Inventory Spreadsheet</h4>
-                    <p class="text-xs text-slate-500">Upload the physical inventory spreadsheet with columns titled <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>brand name</strong>, and <strong>product name</strong>.</p>
+                    <p class="text-xs text-slate-500">Upload physical inventory spreadsheet containing <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>brand name</strong>, <strong>product name</strong>, and <strong>item group</strong>.</p>
                     <div class="flex items-center gap-3">
                         <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
                             <i class="fa-solid fa-file-excel"></i>
@@ -358,7 +353,7 @@
             </div>
         </div>
 
-        <!-- Category Selection Modal for Cycle Count -->
+        <!-- CATEGORY SELECTION MODAL FOR CYCLE COUNT -->
         <div id="cycle-category-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
                 <div class="flex items-center space-x-3">
@@ -400,19 +395,99 @@
             </div>
         </div>
 
+        <!-- GENERATE QUOTE MODAL -->
+        <div id="quote-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in overflow-y-auto">
+            <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-5 my-8">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                            <i class="fa-solid fa-file-pdf text-emerald-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900">Generate Customer Quote</h3>
+                            <p class="text-xs text-slate-500">Fill in quote details and select recommended accessories.</p>
+                        </div>
+                    </div>
+                    <button onclick="closeQuoteModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold px-2">&times;</button>
+                </div>
+
+                <div class="space-y-4 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Sales Person's Name</label>
+                            <input type="text" id="quote-salesperson" placeholder="Enter name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Customer's Name</label>
+                            <input type="text" id="quote-cust-name" placeholder="Enter customer name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Customer Phone Number</label>
+                            <input type="text" id="quote-cust-phone" placeholder="(555) 000-0000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Customer Email</label>
+                            <input type="email" id="quote-cust-email" placeholder="customer@example.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Quote Expiration Date</label>
+                            <input type="date" id="quote-expire-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Generic Notes / Memo</label>
+                            <input type="text" id="quote-notes" placeholder="Special pricing or delivery notes" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                    </div>
+
+                    <!-- Equity Checkbox & Input -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+                        <label class="flex items-center space-x-3 cursor-pointer select-none">
+                            <input type="checkbox" id="chk-equity-toggle" onchange="toggleEquityBox(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                            <span class="font-semibold text-slate-800">Apply Rental Equity?</span>
+                        </label>
+                        <div id="equity-input-container" class="hidden pt-2">
+                            <label class="block font-medium text-slate-600 mb-1">Rental Equity Amount ($)</label>
+                            <input type="number" step="0.01" id="quote-equity-val" value="0.00" class="w-full sm:w-48 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                        </div>
+                    </div>
+
+                    <!-- Recommended Accessories Section -->
+                    <div class="border border-slate-200 rounded-xl p-3.5 space-y-3 bg-slate-50/50">
+                        <h4 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Recommended Accessories Add-ons</h4>
+                        <div id="quote-accessories-container" class="space-y-2">
+                            <!-- Populated dynamically based on product description keywords -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex justify-end space-x-2">
+                    <button onclick="closeQuoteModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition-all">Cancel</button>
+                    <button onclick="generatePDFQuote()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download PDF Quote</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
-        // Global state variables
         let productDatabase = {}; // Key: SKU string, Value: { desc, sell, edlp }
         let loadedFilesData = [];
         let currentTaxRate = 7.0;
-        let taxCoverageContract = false; // Default false (Georgia rule)
+        let taxCoverageContract = false; 
         let isCameraActive = false;
         let isCycleCameraActive = false;
         
         let activeLookupItem = null; 
-        let selectedPriceType = 'sell'; // 'sell' or 'edlp'
+        let selectedPriceType = 'sell'; 
         
         // Add-on states
         let currentDiscountPercent = 10;
@@ -420,10 +495,45 @@
         let currentFinancingMonths = 6; // 6, 24, or 36
 
         // Cycle Count state variables
-        let cycleInventoryData = []; // Array of { sku, desc, expectedQty, group }
-        let rawCycleParsedRows = []; // Temporarily hold parsed rows awaiting category selection
+        let cycleInventoryData = []; 
+        let rawCycleParsedRows = []; 
         let pendingCycleSku = null;
         let activeCycleCategoryFilter = 'ALL';
+
+        // Coverage Plan SKUs mapping table
+        const coverageSkusMap = {
+            2: {
+                low: "1000101", // 2-Yr standard bracket
+                mid: "1000102",
+                high: "1000103"
+            },
+            3: {
+                low: "1000111",
+                mid: "1000112",
+                high: "1000113"
+            },
+            5: {
+                low: "1000121",
+                mid: "1000122",
+                high: "1000123"
+            },
+            ima: "1000199" // 2-Year IMA
+        };
+
+        // Keyword to Recommended Accessory SKUs mapping
+        const accessoryKeywordRules = [
+            { keywords: ["keyboard", "piano"], skus: ["1154007", "0085684", "0188250"] },
+            { keywords: ["electric guitar"], skus: ["1490834", "1000730", "1543698"] },
+            { keywords: ["acoustic guitar"], skus: ["1403739", "1543698", "0228543"] },
+            { keywords: ["drum set", "drumset"], skus: ["0011311", "0030007", "0055988"] },
+            { keywords: ["violin", "viola"], skus: ["0217032", "1537476", "0194910"] },
+            { keywords: ["cello"], skus: ["1537584", "0194910", "1525140"] },
+            { keywords: ["flute"], skus: ["0164951", "0203529", "0187291"] },
+            { keywords: ["clarinet"], skus: ["1408323", "0203529", "1630449"] },
+            { keywords: ["saxophone"], skus: ["1408325", "0203529", "1630444"] },
+            { keywords: ["trumpet"], skus: ["0164979", "0203529", "0011059"] },
+            { keywords: ["trombone"], skus: ["0164978", "0203529", "0045137"] }
+        ];
 
         function switchTab(tabId) {
             ['scanner', 'cycle', 'settings'].forEach(t => {
@@ -431,7 +541,7 @@
                 if (tabEl) tabEl.classList.add('hidden');
                 let navBtn = document.getElementById(`nav-${t}`);
                 if (navBtn) {
-                    navBtn.className = "px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900";
+                    navBtn.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900";
                 }
             });
 
@@ -439,7 +549,7 @@
             if (targetTab) targetTab.classList.remove('hidden');
             let activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) {
-                activeNav.className = "px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm";
+                activeNav.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm";
             }
 
             if (tabId !== 'scanner' && isCameraActive) {
@@ -450,7 +560,6 @@
             }
         }
 
-        // Custom Notification Box (Replaces alert())
         function alertBox(message, title = "Notice", isError = false) {
             const alertEl = document.getElementById('custom-alert');
             const titleEl = document.getElementById('alert-title');
@@ -488,7 +597,7 @@
             recalculateTotals();
         }
 
-        // Spreadsheet Parsing Logic
+        // Price Tag Database Parsing Logic
         function handleFileSelect(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
@@ -564,7 +673,7 @@
             document.getElementById('scanner-db-status').querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-sm";
         }
 
-        // Cycle Count Spreadsheet & Mode Logic
+        // Cycle Count Spreadsheet & Optimization Logic
         function handleCycleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -596,8 +705,8 @@
             let qtyKey = keys.find(k => k.trim().toLowerCase() === 'physical inventory');
             let groupKey = keys.find(k => k.trim().toLowerCase() === 'item group');
             
-            let brandKey = keys.find(k => ['brand name', 'brand'].includes(k.trim().toLowerCase()));
-            let prodKey = keys.find(k => ['product name', 'product'].includes(k.trim().toLowerCase()));
+            let brandKey = keys.find(k => k.trim().toLowerCase() === 'brand name');
+            let prodKey = keys.find(k => k.trim().toLowerCase() === 'product name');
 
             if (!skuKey || !qtyKey) {
                 alertBox("Could not find 'variant number' and 'physical inventory' columns in the uploaded file.", "Format Error", true);
@@ -632,7 +741,7 @@
                 });
             });
 
-            // Show category selection modal immediately
+            // Immediately show category selection modal
             document.getElementById('cycle-category-modal').classList.remove('hidden');
         }
 
@@ -960,7 +1069,7 @@
             return `$${num.toFixed(2)}`;
         }
 
-        // Code 128 Auto Barcode Scanner (QuaggaJS)
+        // Barcode Scanner
         function toggleCamera() {
             if (isCameraActive) {
                 stopCamera();
@@ -1019,7 +1128,7 @@
             }
         }
 
-        // Add-ons & Recalculation Logic
+        // Add-ons & Recalculation
         function toggleDiscountWidget() {
             const useDiscount = document.getElementById('chk-discount').checked;
             const container = document.getElementById('discount-slider-container');
@@ -1156,6 +1265,14 @@
             return 0;
         }
 
+        function getCoverageSku(price, term) {
+            if (term === 'ima') return coverageSkusMap.ima;
+            let bracket = "low";
+            if (price >= 300 && price < 1000) bracket = "mid";
+            else if (price >= 1000) bracket = "high";
+            return coverageSkusMap[term]?.[bracket] || "1000101";
+        }
+
         function toggleFinancingWidget() {
             const useFinancing = document.getElementById('chk-financing').checked;
             const container = document.getElementById('financing-term-container');
@@ -1278,6 +1395,269 @@
             let coverageTaxText = (taxCoverageContract && useSoundcare && coverageCost > 0) ? ' + Coverage Tax' : '';
             document.getElementById('breakdown-tax-label').innerText = `${useDiscount ? 'Discounted base + ' : ''}Includes ${currentTaxRate}% Tax${discountText}${coverageTaxText}`;
             document.getElementById('res-final-total').innerText = `$${finalTotal.toFixed(2)}`;
+        }
+
+        // Quote Modal & PDF Generation Logic
+        function openQuoteModal() {
+            if (!activeLookupItem) return;
+            
+            // Set salesperson & default expiration date (2 weeks from today)
+            document.getElementById('quote-salesperson').value = "";
+            document.getElementById('quote-cust-name').value = "";
+            document.getElementById('quote-cust-phone').value = "";
+            document.getElementById('quote-cust-email').value = "";
+            document.getElementById('quote-notes').value = "";
+            
+            let twoWeeksFromNow = new Date();
+            twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+            document.getElementById('quote-expire-date').valueAsDate = twoWeeksFromNow;
+
+            document.getElementById('chk-equity-toggle').checked = false;
+            document.getElementById('equity-input-container').classList.add('hidden');
+            document.getElementById('quote-equity-val').value = "0.00";
+
+            populateRecommendedAccessories();
+            document.getElementById('quote-modal').classList.remove('hidden');
+        }
+
+        function closeQuoteModal() {
+            document.getElementById('quote-modal').classList.add('hidden');
+        }
+
+        function toggleEquityBox(isChecked) {
+            let container = document.getElementById('equity-input-container');
+            if (isChecked) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                document.getElementById('quote-equity-val').value = "0.00";
+            }
+        }
+
+        function populateRecommendedAccessories() {
+            const container = document.getElementById('quote-accessories-container');
+            container.innerHTML = "";
+            if (!activeLookupItem || !activeLookupItem.desc) {
+                container.innerHTML = `<div class="text-slate-400 italic">No recommended accessories for this item.</div>`;
+                return;
+            }
+
+            let descLower = activeLookupItem.desc.toLowerCase();
+            let matchedSkus = [];
+
+            for (let rule of accessoryKeywordRules) {
+                let matchFound = rule.keywords.some(kw => descLower.includes(kw.toLowerCase()));
+                if (matchFound) {
+                    matchedSkus = rule.skus;
+                    break;
+                }
+            }
+
+            if (matchedSkus.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 italic">No recommended accessory keywords matched for this product.</div>`;
+                return;
+            }
+
+            matchedSkus.forEach((accSku, idx) => {
+                let accItem = productDatabase[accSku];
+                let accName = accItem ? accItem.desc : `Accessory SKU ${accSku}`;
+                let accPrice = accItem ? parsePriceToNumber(accItem.sell !== "N/A" && accItem.sell !== "" ? accItem.sell : accItem.edlp) : 0.00;
+
+                container.innerHTML += `
+                    <label class="flex items-center justify-between bg-white border border-slate-200 rounded-xl p-2.5 cursor-pointer hover:border-emerald-400 transition-all">
+                        <div class="flex items-center space-x-2.5">
+                            <input type="checkbox" id="acc-chk-${idx}" data-sku="${accSku}" data-price="${accPrice}" data-name="${escapeHtml(accName)}" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                            <div>
+                                <span class="font-semibold text-slate-800 block">${escapeHtml(accName)}</span>
+                                <span class="text-[10px] font-mono text-slate-500">SKU: ${accSku}</span>
+                            </div>
+                        </div>
+                        <span class="font-bold text-emerald-700 text-xs">$${accPrice.toFixed(2)}</span>
+                    </label>
+                `;
+            });
+        }
+
+        function generatePDFQuote() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let salesperson = document.getElementById('quote-salesperson').value.trim() || "Store Associate";
+            let custName = document.getElementById('quote-cust-name').value.trim() || "Valued Customer";
+            let custPhone = document.getElementById('quote-cust-phone').value.trim() || "N/A";
+            let custEmail = document.getElementById('quote-cust-email').value.trim() || "N/A";
+            let expireDate = document.getElementById('quote-expire-date').value || "N/A";
+            let notes = document.getElementById('quote-notes').value.trim() || "None";
+            
+            let useEquity = document.getElementById('chk-equity-toggle').checked;
+            let equityVal = useEquity ? parsePriceToNumber(document.getElementById('quote-equity-val').value) : 0.00;
+
+            let rawPriceStr = selectedPriceType === 'edlp' ? activeLookupItem.edlp : activeLookupItem.sell;
+            if (rawPriceStr === "N/A" || rawPriceStr === "" || rawPriceStr === undefined) {
+                rawPriceStr = activeLookupItem.sell !== "N/A" && activeLookupItem.sell !== "" ? activeLookupItem.sell : activeLookupItem.edlp;
+            }
+            let basePrice = parsePriceToNumber(rawPriceStr);
+            let originalBasePrice = basePrice;
+
+            const useDiscount = document.getElementById('chk-discount').checked;
+            if (useDiscount) {
+                basePrice = basePrice * (1 - (currentDiscountPercent / 100));
+            }
+
+            // Apply rental equity subtraction
+            let adjustedSubtotal = Math.max(0, basePrice - equityVal);
+            let taxAmount = adjustedSubtotal * (currentTaxRate / 100);
+
+            const useSoundcare = document.getElementById('chk-soundcare').checked;
+            let coverageCost = 0;
+            let coverageTax = 0;
+            let coverageSkuCode = "";
+            if (useSoundcare) {
+                coverageCost = getSoundcareCost(originalBasePrice, currentSoundcareTerm);
+                if (taxCoverageContract && coverageCost > 0) {
+                    coverageTax = coverageCost * (currentTaxRate / 100);
+                }
+                coverageSkuCode = getCoverageSku(originalBasePrice, currentSoundcareTerm);
+            }
+
+            // Gather selected accessories
+            let selectedAccessories = [];
+            let accCheckboxes = document.querySelectorAll('#quote-accessories-container input[type="checkbox"]');
+            accCheckboxes.forEach(chk => {
+                if (chk.checked) {
+                    selectedAccessories.push({
+                        sku: chk.getAttribute('data-sku'),
+                        name: chk.getAttribute('data-name'),
+                        price: parseFloat(chk.getAttribute('data-price')) || 0
+                    });
+                }
+            });
+
+            let accessoriesTotal = selectedAccessories.reduce((sum, acc) => sum + acc.price, 0);
+            let accessoriesTax = accessoriesTotal * (currentTaxRate / 100);
+
+            let finalTotal = adjustedSubtotal + taxAmount + coverageCost + coverageTax + accessoriesTotal + accessoriesTax;
+
+            // PDF Styling & Rendering
+            doc.setFillColor(16, 185, 129); // Emerald primary
+            doc.rect(0, 0, 210, 28, "F");
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text("CUSTOMER PRICE QUOTE", 14, 18);
+
+            doc.setFontSize(10);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 170, 18, { align: "right" });
+
+            // Customer & Salesperson Info Block
+            doc.setTextColor(30, 41, 59);
+            doc.setFontSize(10);
+            let yPos = 38;
+            doc.text(`Customer Name: ${custName}`, 14, yPos);
+            doc.text(`Salesperson: ${salesperson}`, 120, yPos);
+            yPos += 6;
+            doc.text(`Phone: ${custPhone}`, 14, yPos);
+            doc.text(`Email: ${custEmail}`, 120, yPos);
+            yPos += 6;
+            doc.text(`Quote Expiration: ${expireDate}`, 14, yPos);
+            yPos += 10;
+
+            // Line items table header
+            doc.setFillColor(241, 245, 249);
+            doc.rect(14, yPos, 182, 8, "F");
+            doc.setFont("Helvetica", "bold");
+            doc.text("SKU / Item Description", 18, yPos + 6);
+            doc.text("Price", 185, yPos + 6, { align: "right" });
+            yPos += 12;
+
+            doc.setFont("Helvetica", "normal");
+
+            // Main Product
+            let mainDesc = `${activeLookupItem.desc} (${selectedPriceType === 'edlp' ? 'StorEDLP' : 'Sell Price'})`;
+            doc.text(activeLookupItem.sku, 18, yPos);
+            doc.text(mainDesc.substring(0, 60), 45, yPos);
+            doc.text(`$${originalBasePrice.toFixed(2)}`, 185, yPos, { align: "right" });
+            yPos += 8;
+
+            if (useDiscount) {
+                doc.setTextColor(16, 185, 129);
+                doc.text("DISCOUNT", 18, yPos);
+                doc.text(`${currentDiscountPercent}% Promotional Discount Applied`, 45, yPos);
+                let discountAmount = originalBasePrice * (currentDiscountPercent / 100);
+                doc.text(`-$${discountAmount.toFixed(2)}`, 185, yPos, { align: "right" });
+                doc.setTextColor(30, 41, 59);
+                yPos += 8;
+            }
+
+            if (useEquity && equityVal > 0) {
+                doc.setTextColor(16, 185, 129);
+                doc.text("EQUITY", 18, yPos);
+                doc.text("Rental Equity Applied Toward Purchase", 45, yPos);
+                doc.text(`-$${equityVal.toFixed(2)}`, 185, yPos, { align: "right" });
+                doc.setTextColor(30, 41, 59);
+                yPos += 8;
+            }
+
+            // Coverage Plan
+            if (useSoundcare && coverageCost > 0) {
+                let planName = currentSoundcareTerm === 'ima' ? '2-Year IMA Contract' : `${currentSoundcareTerm}-Year SoundCare Coverage`;
+                doc.text(coverageSkuCode, 18, yPos);
+                doc.text(planName, 45, yPos);
+                doc.text(`$${coverageCost.toFixed(2)}`, 185, yPos, { align: "right" });
+                yPos += 8;
+            }
+
+            // Accessories
+            selectedAccessories.forEach(acc => {
+                doc.text(acc.sku, 18, yPos);
+                doc.text(acc.name.substring(0, 60), 45, yPos);
+                doc.text(`$${acc.price.toFixed(2)}`, 185, yPos, { align: "right" });
+                yPos += 8;
+            });
+
+            yPos += 4;
+            doc.setDrawColor(203, 213, 225);
+            doc.line(14, yPos, 196, yPos);
+            yPos += 8;
+
+            // Summary Totals
+            let subtotalAll = adjustedSubtotal + coverageCost + accessoriesTotal;
+            let totalTaxAll = taxAmount + coverageTax + accessoriesTax;
+
+            doc.text("Subtotal:", 140, yPos);
+            doc.text(`$${subtotalAll.toFixed(2)}`, 185, yPos, { align: "right" });
+            yPos += 6;
+
+            doc.text(`Estimated Tax (${currentTaxRate}%):`, 140, yPos);
+            doc.text(`$${totalTaxAll.toFixed(2)}`, 185, yPos, { align: "right" });
+            yPos += 8;
+
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("Out-The-Door Total:", 120, yPos);
+            doc.text(`$${finalTotal.toFixed(2)}`, 185, yPos, { align: "right" });
+            yPos += 12;
+
+            if (document.getElementById('chk-financing').checked && finalTotal > 299.99) {
+                let monthlyPmt = finalTotal / currentFinancingMonths;
+                doc.setFontSize(10);
+                doc.setTextColor(16, 185, 129);
+                doc.text(`Or Financing: ${currentFinancingMonths} monthly installments of $${monthlyPmt.toFixed(2)} / mo`, 14, yPos);
+                doc.setTextColor(30, 41, 59);
+                yPos += 10;
+            }
+
+            // Notes Section
+            doc.setFontSize(9);
+            doc.setFont("Helvetica", "normal");
+            doc.text("Notes / Memo:", 14, yPos);
+            yPos += 5;
+            doc.text(notes, 14, yPos, { maxWidth: 180 });
+
+            doc.save(`Quote_${activeLookupItem.sku}_${custName.replace(/\s+/g, '_')}.pdf`);
+            closeQuoteModal();
+            alertBox("PDF Quote generated and downloaded successfully!", "Quote Ready");
         }
     </script>
 </body>
