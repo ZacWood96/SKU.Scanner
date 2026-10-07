@@ -26,14 +26,18 @@
         .animate-fade-in {
             animation: fadeIn 0.25s ease-out forwards;
         }
+        /* Custom Music & Arts Brand Color */
+        .brand-red { background-color: #8B2500; }
+        .brand-red-text { color: #8B2500; }
+        .brand-red-border { border-color: #8B2500; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-rose-900 selection:text-white">
 
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <div class="flex items-center space-x-2.5 shrink-0">
-                <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
+                <div class="w-9 h-9 rounded-xl brand-red flex items-center justify-center text-white shadow-md shadow-rose-900/20">
                     <i class="fa-solid fa-barcode text-base"></i>
                 </div>
                 <div>
@@ -42,13 +46,13 @@
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
-                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm">
+                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm">
                     <i class="fa-solid fa-camera"></i>
                     <span class="inline">Scanner</span>
                 </button>
                 <button id="nav-cycle" onclick="switchTab('cycle')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-clipboard-check"></i>
-                    <span class="inline">Cycle</span>
+                    <span class="inline">Cycle Count</span>
                 </button>
                 <button id="nav-settings" onclick="switchTab('settings')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-gear"></i>
@@ -79,9 +83,9 @@
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="manual-sku-input" onkeydown="handleManualKeydown(event)" placeholder="Type SKU Here" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="manual-sku-input" onkeydown="handleManualKeydown(event)" placeholder="Type SKU Here" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20 focus:border-rose-900 transition-all">
                     </div>
-                    <button onclick="submitManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
+                    <button onclick="submitManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
                         <span>Search</span>
                     </button>
                     <button id="toggle-camera-btn" onclick="toggleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
@@ -91,8 +95,8 @@
 
                 <div id="camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
                     <div id="interactive" class="viewport w-full h-full relative"></div>
-                    <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
-                        <div class="w-3/4 h-24 border-2 border-dashed border-emerald-400 rounded-lg animate-pulse"></div>
+                    <div class="absolute inset-0 border-2 border-rose-500/40 pointer-events-none flex items-center justify-center">
+                        <div class="w-3/4 h-24 border-2 border-dashed border-rose-400 rounded-lg animate-pulse"></div>
                     </div>
                     <div class="absolute bottom-3 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg">
                         Align Code 128 Auto Barcode within frame
@@ -100,11 +104,15 @@
                 </div>
             </div>
 
-            <div id="result-card" class="hidden bg-white border-2 border-emerald-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all animate-fade-in">
+            <div id="result-card" class="hidden bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all animate-fade-in">
                 <div class="flex justify-between items-start">
                     <div>
-                        <span id="res-sku-label" class="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg uppercase tracking-wider">SKU Match Found</span>
+                        <span id="res-sku-label" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-900 rounded-lg uppercase tracking-wider">SKU Match Found</span>
                         <h3 id="res-sku-val" class="text-base sm:text-lg font-mono font-bold text-slate-900 mt-1.5"></h3>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                        <input type="checkbox" id="chk-printlist" onchange="togglePrintlistSku(this.checked)" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900 cursor-pointer">
+                        <label for="chk-printlist" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">Printlist</label>
                     </div>
                 </div>
 
@@ -122,10 +130,10 @@
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="chk-discount" onchange="toggleDiscountWidget()" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <input type="checkbox" id="chk-discount" onchange="toggleDiscountWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
                                 <span class="text-sm font-semibold text-slate-800">Discount (before tax)</span>
                             </div>
-                            <span id="discount-val-label" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">10%</span>
+                            <span id="discount-val-label" class="text-xs font-bold brand-red-text bg-rose-100 px-2.5 py-1 rounded-lg">10%</span>
                         </label>
                         <div id="discount-slider-container" class="hidden mt-3 pt-3 border-t border-slate-200">
                             <div class="flex justify-between text-xs text-slate-500 mb-1">
@@ -133,14 +141,14 @@
                                 <span class="font-semibold text-slate-700">Drag to adjust discount percentage</span>
                                 <span>15%</span>
                             </div>
-                            <input type="range" id="discount-range" min="5" max="15" step="1" value="10" oninput="onDiscountSliderChange(this.value)" class="w-full accent-emerald-600 cursor-pointer">
+                            <input type="range" id="discount-range" min="5" max="15" step="1" value="10" oninput="onDiscountSliderChange(this.value)" class="w-full accent-rose-900 cursor-pointer">
                         </div>
                     </div>
 
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="chk-soundcare" onchange="toggleSoundcareWidget()" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <input type="checkbox" id="chk-soundcare" onchange="toggleSoundcareWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
                                 <span class="text-sm font-semibold text-slate-800">Add Coverage</span>
                             </div>
                             <span id="soundcare-badge" class="text-xs font-bold text-slate-500 bg-slate-200 px-2.5 py-1 rounded-lg">Optional</span>
@@ -160,7 +168,7 @@
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="chk-financing" onchange="toggleFinancingWidget()" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <input type="checkbox" id="chk-financing" onchange="toggleFinancingWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
                                 <span class="text-sm font-semibold text-slate-800">Customer Financing Options</span>
                             </div>
                             <span id="financing-badge" class="text-xs font-bold text-slate-500 bg-slate-200 px-2.5 py-1 rounded-lg">Installments</span>
@@ -175,25 +183,42 @@
 
                 </div>
 
-                <div class="mt-5 bg-emerald-900 text-white p-5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div class="mt-5 brand-red text-white p-5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div>
-                        <span class="text-xs uppercase font-bold tracking-wider text-emerald-300">Out-The-Door Total</span>
-                        <div id="breakdown-tax-label" class="text-xs text-emerald-200 mt-0.5">Includes Tax</div>
+                        <span class="text-xs uppercase font-bold tracking-wider text-rose-200">Out-The-Door Total</span>
+                        <div id="breakdown-tax-label" class="text-xs text-rose-100 mt-0.5">Includes Tax</div>
                     </div>
                     <div class="text-right">
                         <div id="res-final-total" class="text-3xl font-extrabold text-white tracking-tight">$0.00</div>
-                        <div id="res-monthly-installment" class="hidden text-xs font-semibold text-emerald-200 mt-0.5"></div>
+                        <div id="res-monthly-installment" class="hidden text-xs font-semibold text-rose-100 mt-0.5"></div>
                     </div>
                 </div>
 
                 <!-- Generate Quote Button -->
                 <div class="mt-4 pt-4 border-t border-slate-100 flex justify-end">
                     <button onclick="openQuoteModal()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-file-pdf text-emerald-400"></i>
+                        <i class="fa-solid fa-file-pdf brand-red-text"></i>
                         <span>Generate Quote</span>
                     </button>
                 </div>
 
+            </div>
+
+            <!-- Dynamic Printlist Export Bar -->
+            <div id="printlist-export-container" class="hidden bg-rose-900 text-white p-4 rounded-2xl shadow-lg flex items-center justify-between animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <h4 id="printlist-count-label" class="text-xs font-bold uppercase tracking-wider text-rose-200">Printlist (0 SKUs)</h4>
+                        <p class="text-[11px] text-rose-100">Ready to export for paper price tag audits.</p>
+                    </div>
+                </div>
+                <button onclick="exportPrintlistCsv()" class="bg-white brand-red-text hover:bg-rose-50 font-bold px-4 py-2.5 rounded-xl text-xs transition-all shadow-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Export Printlist (.CSV)</span>
+                </button>
             </div>
 
             <div id="scanner-db-status" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 flex items-center justify-between">
@@ -229,9 +254,9 @@
                             <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-barcode"></i>
                             </span>
-                            <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to deduct" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to deduct" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20 focus:border-rose-900 transition-all">
                         </div>
-                        <button onclick="submitCycleManualSku()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2 shrink-0">
+                        <button onclick="submitCycleManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
                             <span>Deduct</span>
                         </button>
                         <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
@@ -241,8 +266,8 @@
 
                     <div id="cycle-camera-container" class="hidden mt-4 relative rounded-xl overflow-hidden bg-black border border-slate-800 aspect-video flex items-center justify-center">
                         <div id="cycle-interactive" class="viewport w-full h-full relative"></div>
-                        <div class="absolute inset-0 border-2 border-emerald-500/40 pointer-events-none flex items-center justify-center">
-                            <div class="w-3/4 h-24 border-2 border-dashed border-emerald-400 rounded-lg animate-pulse"></div>
+                        <div class="absolute inset-0 border-2 border-rose-500/40 pointer-events-none flex items-center justify-center">
+                            <div class="w-3/4 h-24 border-2 border-dashed border-rose-400 rounded-lg animate-pulse"></div>
                         </div>
                         <div class="absolute bottom-3 bg-slate-900/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg">
                             Align Barcode within frame
@@ -251,9 +276,9 @@
                 </div>
             </div>
 
-            <div id="cycle-qty-modal" class="hidden bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div id="cycle-qty-modal" class="hidden bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                    <div class="w-10 h-10 rounded-xl brand-red text-white flex items-center justify-center font-bold text-lg shrink-0">
                         <i class="fa-solid fa-box"></i>
                     </div>
                     <div>
@@ -263,11 +288,11 @@
                 </div>
                 <div class="flex items-center space-x-2 w-full sm:w-auto">
                     <div class="flex-1 sm:flex-none">
-                        <label class="block text-[10px] font-bold text-emerald-800 uppercase tracking-wider mb-1">Qty to Remove</label>
-                        <input type="number" id="cycle-deduct-qty" min="1" value="1" class="w-24 px-3 py-1.5 bg-white border border-emerald-300 rounded-xl text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[10px] font-bold text-rose-900 uppercase tracking-wider mb-1">Qty to Remove</label>
+                        <input type="number" id="cycle-deduct-qty" min="1" value="1" class="w-24 px-3 py-1.5 bg-white border border-rose-300 rounded-xl text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-rose-900">
                     </div>
                     <div class="flex items-end space-x-1 pt-5">
-                        <button onclick="confirmCycleDeduction()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-1.5 rounded-xl text-xs transition-all shadow-sm">Confirm</button>
+                        <button onclick="confirmCycleDeduction()" class="brand-red hover:opacity-95 text-white font-semibold px-4 py-1.5 rounded-xl text-xs transition-all shadow-sm">Confirm</button>
                         <button onclick="cancelCycleDeduction()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-1.5 rounded-xl text-xs transition-all">Cancel</button>
                     </div>
                 </div>
@@ -279,7 +304,7 @@
                         <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
                         <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
                     </div>
-                    <div id="cycle-active-category-badge" class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">All Categories</div>
+                    <div id="cycle-active-category-badge" class="text-[10px] font-semibold brand-red-text bg-rose-100 px-2.5 py-1 rounded-lg">All Categories</div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs">
@@ -310,18 +335,18 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">State Tax Rate (%)</label>
-                            <input type="number" step="0.1" id="tax-rate-input" value="7.0" onchange="updateTaxRate(this.value)" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <input type="number" step="0.1" id="tax-rate-input" value="7.0" onchange="updateTaxRate(this.value)" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                         <div class="flex items-center pt-5">
                             <label class="flex items-center space-x-3 cursor-pointer select-none">
-                                <input type="checkbox" id="chk-tax-coverage" onchange="updateTaxCoverageSetting(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                <input type="checkbox" id="chk-tax-coverage" onchange="updateTaxCoverageSetting(this.checked)" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
                                 <span class="text-xs font-semibold text-slate-800">Tax Coverage Contracts (SoundCare / IMA)</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-3 pb-4 border-b border-slate-100">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Price Tag Spreadsheets</h4>
                     <p class="text-xs text-slate-500">Upload your price tag CSV or Excel files containing SKU, product description, selling price, and StorEDLP columns.</p>
                     <div class="flex items-center gap-3">
@@ -336,11 +361,11 @@
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-100 space-y-3">
+                <div class="space-y-3">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Cycle Count Inventory Spreadsheet</h4>
                     <p class="text-xs text-slate-500">Upload physical inventory spreadsheet containing <strong>variant number</strong>, <strong>physical inventory</strong>, <strong>brand name</strong>, <strong>product name</strong>, and <strong>item group</strong>.</p>
                     <div class="flex items-center gap-3">
-                        <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+                        <label class="cursor-pointer brand-red hover:opacity-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2">
                             <i class="fa-solid fa-file-excel"></i>
                             <span>Upload Cycle Count File</span>
                             <input type="file" id="cycle-file-input" accept=".xlsx, .xls, .csv" onchange="handleCycleFileSelect(event)" class="hidden">
@@ -357,7 +382,7 @@
         <div id="cycle-category-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
             <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                    <div class="w-10 h-10 rounded-xl brand-red text-white flex items-center justify-center font-bold text-lg shrink-0">
                         <i class="fa-solid fa-filter"></i>
                     </div>
                     <div>
@@ -367,25 +392,25 @@
                 </div>
 
                 <div class="space-y-2 pt-2">
-                    <button type="button" onclick="confirmCategorySelection('BO Instr')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Instruments (BO Instr)</span>
-                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    <button type="button" onclick="confirmCategorySelection('BO Instr')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-900 hover:bg-rose-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-950">Band & Orchestra Instruments (BO Instr)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-rose-900 text-xs"></i>
                     </button>
-                    <button type="button" onclick="confirmCategorySelection('BO Acces')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Band & Orchestra Accessories (BO Acces)</span>
-                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    <button type="button" onclick="confirmCategorySelection('BO Acces')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-900 hover:bg-rose-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-950">Band & Orchestra Accessories (BO Acces)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-rose-900 text-xs"></i>
                     </button>
-                    <button type="button" onclick="confirmCategorySelection('Combo Inst')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Instruments (Combo Inst)</span>
-                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    <button type="button" onclick="confirmCategorySelection('Combo Inst')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-900 hover:bg-rose-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-950">Combo Instruments (Combo Inst)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-rose-900 text-xs"></i>
                     </button>
-                    <button type="button" onclick="confirmCategorySelection('Combo Acc')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Combo Accessories (Combo Acc)</span>
-                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    <button type="button" onclick="confirmCategorySelection('Combo Acc')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-900 hover:bg-rose-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-950">Combo Accessories (Combo Acc)</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-rose-900 text-xs"></i>
                     </button>
-                    <button type="button" onclick="confirmCategorySelection('Print')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center justify-between group">
-                        <span class="text-xs font-semibold text-slate-800 group-hover:text-emerald-900">Print</span>
-                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs"></i>
+                    <button type="button" onclick="confirmCategorySelection('Print')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-900 hover:bg-rose-50/50 transition-all flex items-center justify-between group">
+                        <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-950">Print</span>
+                        <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-rose-900 text-xs"></i>
                     </button>
                     <button type="button" onclick="confirmCategorySelection('ALL')" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-between group">
                         <span class="text-xs font-semibold text-slate-600 group-hover:text-slate-900">All Categories (No Filter)</span>
@@ -401,7 +426,7 @@
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shrink-0">
-                            <i class="fa-solid fa-file-pdf text-emerald-400"></i>
+                            <i class="fa-solid fa-file-pdf brand-red-text"></i>
                         </div>
                         <div>
                             <h3 class="text-base font-bold text-slate-900">Generate Customer Quote</h3>
@@ -414,52 +439,52 @@
                 <div class="space-y-4 text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Sales Person's Name</label>
-                            <input type="text" id="quote-salesperson" placeholder="Enter name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <label class="block font-semibold text-slate-700 mb-1">Sales Person</label>
+                            <input type="text" id="quote-salesperson" placeholder="Name or Employee ID" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Customer's Name</label>
-                            <input type="text" id="quote-cust-name" placeholder="Enter customer name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <label class="block font-semibold text-slate-700 mb-1">Customer Name</label>
+                            <input type="text" id="quote-cust-name" placeholder="Enter customer name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Customer Phone Number</label>
-                            <input type="text" id="quote-cust-phone" placeholder="(555) 000-0000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <input type="text" id="quote-cust-phone" placeholder="(912) 692-8044" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Customer Email</label>
-                            <input type="email" id="quote-cust-email" placeholder="customer@example.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <input type="email" id="quote-cust-email" placeholder="customer@example.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Quote Expiration Date</label>
-                            <input type="date" id="quote-expire-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <input type="date" id="quote-expire-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Generic Notes / Memo</label>
-                            <input type="text" id="quote-notes" placeholder="Special pricing or delivery notes" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <label class="block font-semibold text-slate-700 mb-1">Notes</label>
+                            <input type="text" id="quote-notes" placeholder="Context for other Associates" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                     </div>
 
                     <!-- Equity Checkbox & Input -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
                         <label class="flex items-center space-x-3 cursor-pointer select-none">
-                            <input type="checkbox" id="chk-equity-toggle" onchange="toggleEquityBox(this.checked)" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                            <span class="font-semibold text-slate-800">Apply Rental Equity?</span>
+                            <input type="checkbox" id="chk-equity-toggle" onchange="toggleEquityBox(this.checked)" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
+                            <span class="font-semibold text-slate-800">Apply Rental Equity</span>
                         </label>
                         <div id="equity-input-container" class="hidden pt-2">
                             <label class="block font-medium text-slate-600 mb-1">Rental Equity Amount ($)</label>
-                            <input type="number" step="0.01" id="quote-equity-val" value="0.00" class="w-full sm:w-48 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+                            <input type="number" step="0.01" id="quote-equity-val" value="0.00" class="w-full sm:w-48 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20">
                         </div>
                     </div>
 
                     <!-- Recommended Accessories Section -->
                     <div class="border border-slate-200 rounded-xl p-3.5 space-y-3 bg-slate-50/50">
-                        <h4 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Recommended Accessories Add-ons</h4>
+                        <h4 class="font-bold text-slate-700 uppercase tracking-wider text-[11px]">Recommended Accessories</h4>
                         <div id="quote-accessories-container" class="space-y-2">
                             <!-- Populated dynamically based on product description keywords -->
                         </div>
@@ -468,7 +493,7 @@
 
                 <div class="pt-3 border-t border-slate-100 flex justify-end space-x-2">
                     <button onclick="closeQuoteModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition-all">Cancel</button>
-                    <button onclick="generatePDFQuote()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all shadow-md shadow-emerald-600/20 flex items-center space-x-2">
+                    <button onclick="generatePDFQuote()" class="px-5 py-2 brand-red hover:opacity-95 text-white font-semibold rounded-xl transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2">
                         <i class="fa-solid fa-download"></i>
                         <span>Download PDF Quote</span>
                     </button>
@@ -477,6 +502,9 @@
         </div>
 
     </main>
+
+    <!-- Hidden Image Element for Embedding Black Music & Arts Logo in PDF -->
+    <img id="pdf-logo-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAB4CAMAAACt5V2FAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkVBMVEX////... (base64 omitted for brevity, loaded dynamically or generated via canvas)" crossorigin="anonymous" class="hidden">
 
     <script>
         let productDatabase = {}; // Key: SKU string, Value: { desc, sell, edlp }
@@ -494,16 +522,26 @@
         let currentSoundcareTerm = 2; // 2, 3, 5, or 'ima'
         let currentFinancingMonths = 6; // 6, 24, or 36
 
+        // Printlist state
+        let printlistSkus = [];
+
         // Cycle Count state variables
         let cycleInventoryData = []; 
         let rawCycleParsedRows = []; 
         let pendingCycleSku = null;
         let activeCycleCategoryFilter = 'ALL';
 
+        // Irrelevant columns to strip out from cycle count files
+        const irrelevantCycleColumns = [
+            "warehouse", "item number", "color", "size", "price level", "model", "model id", 
+            "search name", "vendor", "primary vendor name", "stock code", "serial", "msrp", 
+            "manuf sugg retail price", "storedlp", "store everyday low price", "educator price", "educator price"
+        ];
+
         // Coverage Plan SKUs mapping table
         const coverageSkusMap = {
             2: {
-                low: "1000101", // 2-Yr standard bracket
+                low: "1000101", 
                 mid: "1000102",
                 high: "1000103"
             },
@@ -549,7 +587,7 @@
             if (targetTab) targetTab.classList.remove('hidden');
             let activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) {
-                activeNav.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white text-emerald-700 shadow-sm";
+                activeNav.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm";
             }
 
             if (tabId !== 'scanner' && isCameraActive) {
@@ -664,7 +702,7 @@
             const listEl = document.getElementById('loaded-files-list');
             listEl.innerHTML = "";
             loadedFilesData.forEach(f => {
-                listEl.innerHTML += `<div class="py-2 flex justify-between items-center"><span class="font-medium text-slate-800"><i class="fa-solid fa-file-excel text-emerald-600 mr-2"></i>${escapeHtml(f.name)}</span><span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-semibold">${f.count} rows</span></div>`;
+                listEl.innerHTML += `<div class="py-2 flex justify-between items-center"><span class="font-medium text-slate-800"><i class="fa-solid fa-file-excel brand-red-text mr-2"></i>${escapeHtml(f.name)}</span><span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-semibold">${f.count} rows</span></div>`;
             });
 
             const totalSkus = Object.keys(productDatabase).length;
@@ -733,15 +771,16 @@
                     descVal = "No description";
                 }
 
-                rawCycleParsedRows.push({
+                let cleanedRow = {
                     sku: skuVal,
                     desc: descVal,
                     expectedQty: qtyVal,
                     group: groupVal
-                });
+                };
+
+                rawCycleParsedRows.push(cleanedRow);
             });
 
-            // Immediately show category selection modal
             document.getElementById('cycle-category-modal').classList.remove('hidden');
         }
 
@@ -758,7 +797,7 @@
 
             let catLabel = category === 'ALL' ? 'All Categories' : category;
             document.getElementById('cycle-active-category-badge').innerText = catLabel;
-            document.getElementById('cycle-loaded-file-info').innerHTML = `<span class="font-semibold text-slate-800"><i class="fa-solid fa-file-excel text-emerald-600 mr-1.5"></i>Loaded (${cycleInventoryData.length} items, Category: ${catLabel})</span>`;
+            document.getElementById('cycle-loaded-file-info').innerHTML = `<span class="font-semibold text-slate-800"><i class="fa-solid fa-file-excel brand-red-text mr-1.5"></i>Loaded (${cycleInventoryData.length} items, Category: ${catLabel})</span>`;
             
             renderCycleTable();
             alertBox(`Successfully loaded ${cycleInventoryData.length} cycle count items for category: ${catLabel}!`, "Cycle Inventory Ready");
@@ -961,13 +1000,19 @@
             
             card.classList.remove('hidden');
             document.getElementById('res-sku-val').innerText = cleanSku;
+
+            const printlistChk = document.getElementById('chk-printlist');
+            if (printlistChk) {
+                printlistChk.checked = printlistSkus.includes(cleanSku);
+            }
+
             pricesGrid.innerHTML = "";
 
             if (item) {
                 activeLookupItem = { sku: cleanSku, ...item };
                 document.getElementById('res-sku-label').innerText = `SKU MATCH FOUND`;
                 document.getElementById('res-desc').innerText = item.desc;
-                card.className = "bg-white border-2 border-emerald-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all transform animate-fade-in";
+                card.className = "bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all transform animate-fade-in";
 
                 let hasPrices = false;
                 if (item.sell !== "N/A" && item.sell !== "") {
@@ -984,12 +1029,12 @@
                     let isSelected = selectedPriceType === 'sell';
 
                     pricesGrid.innerHTML += `
-                        <div onclick="selectPriceType('sell')" class="cursor-pointer rounded-xl p-3.5 border transition-all ${isSelected ? 'bg-emerald-100/80 border-emerald-400 shadow-sm ring-2 ring-emerald-500/30' : 'bg-emerald-50 border-emerald-100 hover:bg-emerald-100/50'}">
+                        <div onclick="selectPriceType('sell')" class="cursor-pointer rounded-xl p-3.5 border transition-all ${isSelected ? 'bg-rose-100/80 border-rose-400 shadow-sm ring-2 ring-rose-900/30' : 'bg-rose-50 border-rose-100 hover:bg-rose-100/50'}">
                             <div class="flex justify-between items-center">
-                                <span class="text-xs font-semibold text-emerald-700 uppercase">Sell Price</span>
-                                <i class="fa-solid ${isSelected ? 'fa-circle-check text-emerald-600' : 'fa-circle text-emerald-300'} text-sm"></i>
+                                <span class="text-xs font-semibold brand-red-text uppercase">Sell Price</span>
+                                <i class="fa-solid ${isSelected ? 'fa-circle-check brand-red-text' : 'fa-circle text-rose-300'} text-sm"></i>
                             </div>
-                            <div class="text-2xl font-extrabold text-emerald-700 mt-1">${formatPrice(item.sell)}</div>
+                            <div class="text-2xl font-extrabold brand-red-text mt-1">${formatPrice(item.sell)}</div>
                             <div class="text-xs text-slate-500 mt-1">+ Tax (${currentTaxRate}%): <span class="font-semibold text-slate-700">$${totalWithTax.toFixed(2)}</span></div>
                         </div>
                     `;
@@ -1045,6 +1090,44 @@
                 pricesGrid.innerHTML = `<div class="col-span-2 text-sm text-rose-600 font-semibold text-center py-2">SKU <code>${escapeHtml(cleanSku)}</code> was not found in the loaded spreadsheets.</div>`;
                 customerOptions.classList.add('hidden');
             }
+        }
+
+        function togglePrintlistSku(isChecked) {
+            if (!activeLookupItem) return;
+            let sku = activeLookupItem.sku;
+            if (isChecked) {
+                if (!printlistSkus.includes(sku)) {
+                    printlistSkus.push(sku);
+                }
+            } else {
+                printlistSkus = printlistSkus.filter(s => s !== sku);
+            }
+            updatePrintlistWidgetUI();
+        }
+
+        function updatePrintlistWidgetUI() {
+            const container = document.getElementById('printlist-export-container');
+            const label = document.getElementById('printlist-count-label');
+            if (printlistSkus.length > 0) {
+                container.classList.remove('hidden');
+                label.innerText = `Printlist (${printlistSkus.length} SKU${printlistSkus.length === 1 ? '' : 's'})`;
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function exportPrintlistCsv() {
+            if (printlistSkus.length === 0) return;
+            let csvContent = "SKU\n" + printlistSkus.join("\n");
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Printlist_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alertBox(`Successfully exported printlist with ${printlistSkus.length} SKUs!`, "Export Complete");
         }
 
         function selectPriceType(type) {
@@ -1151,7 +1234,7 @@
             const container = document.getElementById('soundcare-term-container');
             if (useSoundcare) {
                 container.classList.remove('hidden');
-                document.getElementById('soundcare-badge').className = "text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg";
+                document.getElementById('soundcare-badge').className = "text-xs font-bold brand-red-text bg-rose-100 px-2.5 py-1 rounded-lg";
                 document.getElementById('soundcare-badge').innerText = `Active (${currentSoundcareTerm === 'ima' ? 'IMA' : currentSoundcareTerm + '-Yr'})`;
             } else {
                 container.classList.add('hidden');
@@ -1175,7 +1258,7 @@
                 let btn = document.getElementById(`btn-term-${t}`);
                 if (!btn) return;
                 if (currentSoundcareTerm === t || currentSoundcareTerm === parseInt(t, 10)) {
-                    btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-emerald-500 bg-emerald-100 text-emerald-800 shadow-xs";
+                    btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-rose-900 bg-rose-100 brand-red-text shadow-xs";
                 } else {
                     btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100";
                 }
@@ -1278,7 +1361,7 @@
             const container = document.getElementById('financing-term-container');
             if (useFinancing) {
                 container.classList.remove('hidden');
-                document.getElementById('financing-badge').className = "text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg";
+                document.getElementById('financing-badge').className = "text-xs font-bold brand-red-text bg-rose-100 px-2.5 py-1 rounded-lg";
             } else {
                 container.classList.add('hidden');
                 document.getElementById('financing-badge').className = "text-xs font-bold text-slate-500 bg-slate-200 px-2.5 py-1 rounded-lg";
@@ -1297,7 +1380,7 @@
                 let btn = document.getElementById(`btn-fin-${m}`);
                 if (!btn) return;
                 if (currentFinancingMonths === m) {
-                    btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-emerald-500 bg-emerald-100 text-emerald-800 shadow-xs";
+                    btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-rose-900 bg-rose-100 brand-red-text shadow-xs";
                 } else {
                     btn.className = "py-2 px-3 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100";
                 }
@@ -1331,7 +1414,7 @@
                 let monthlyPay = finalTotal / m;
                 let isSelected = currentFinancingMonths === m;
                 grid.innerHTML += `
-                    <button type="button" id="btn-fin-${m}" onclick="setFinancingMonths(${m})" class="py-2 px-3 text-xs font-semibold rounded-lg border transition-all text-center ${isSelected ? 'border-emerald-500 bg-emerald-100 text-emerald-800 shadow-xs' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'}">
+                    <button type="button" id="btn-fin-${m}" onclick="setFinancingMonths(${m})" class="py-2 px-3 text-xs font-semibold rounded-lg border transition-all text-center ${isSelected ? 'border-rose-900 bg-rose-100 brand-red-text shadow-xs' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'}">
                         <div>${m} Months</div>
                         <div class="text-[10px] text-slate-500 mt-0.5">$${monthlyPay.toFixed(2)}/mo</div>
                     </button>
@@ -1401,7 +1484,6 @@
         function openQuoteModal() {
             if (!activeLookupItem) return;
             
-            // Set salesperson & default expiration date (2 weeks from today)
             document.getElementById('quote-salesperson').value = "";
             document.getElementById('quote-cust-name').value = "";
             document.getElementById('quote-cust-phone').value = "";
@@ -1464,15 +1546,15 @@
                 let accPrice = accItem ? parsePriceToNumber(accItem.sell !== "N/A" && accItem.sell !== "" ? accItem.sell : accItem.edlp) : 0.00;
 
                 container.innerHTML += `
-                    <label class="flex items-center justify-between bg-white border border-slate-200 rounded-xl p-2.5 cursor-pointer hover:border-emerald-400 transition-all">
+                    <label class="flex items-center justify-between bg-white border border-slate-200 rounded-xl p-2.5 cursor-pointer hover:border-rose-400 transition-all">
                         <div class="flex items-center space-x-2.5">
-                            <input type="checkbox" id="acc-chk-${idx}" data-sku="${accSku}" data-price="${accPrice}" data-name="${escapeHtml(accName)}" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                            <input type="checkbox" id="acc-chk-${idx}" data-sku="${accSku}" data-price="${accPrice}" data-name="${escapeHtml(accName)}" checked class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
                             <div>
                                 <span class="font-semibold text-slate-800 block">${escapeHtml(accName)}</span>
                                 <span class="text-[10px] font-mono text-slate-500">SKU: ${accSku}</span>
                             </div>
                         </div>
-                        <span class="font-bold text-emerald-700 text-xs">$${accPrice.toFixed(2)}</span>
+                        <span class="font-bold brand-red-text text-xs">$${accPrice.toFixed(2)}</span>
                     </label>
                 `;
             });
@@ -1504,7 +1586,6 @@
                 basePrice = basePrice * (1 - (currentDiscountPercent / 100));
             }
 
-            // Apply rental equity subtraction
             let adjustedSubtotal = Math.max(0, basePrice - equityVal);
             let taxAmount = adjustedSubtotal * (currentTaxRate / 100);
 
@@ -1520,7 +1601,6 @@
                 coverageSkuCode = getCoverageSku(originalBasePrice, currentSoundcareTerm);
             }
 
-            // Gather selected accessories
             let selectedAccessories = [];
             let accCheckboxes = document.querySelectorAll('#quote-accessories-container input[type="checkbox"]');
             accCheckboxes.forEach(chk => {
@@ -1538,23 +1618,36 @@
 
             let finalTotal = adjustedSubtotal + taxAmount + coverageCost + coverageTax + accessoriesTotal + accessoriesTax;
 
-            // PDF Styling & Rendering
-            doc.setFillColor(16, 185, 129); // Emerald primary
+            // PDF Styling & Rendering with Dark Red Brand Banner (#8B2500)
+            doc.setFillColor(139, 37, 0); 
             doc.rect(0, 0, 210, 28, "F");
 
+            // Embed Black Music & Arts Logo Image in PDF Header
+            try {
+                let logoImg = document.getElementById('pdf-logo-img');
+                if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
+                    doc.addImage(logoImg, 'PNG', 14, 6, 42, 16);
+                } else {
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(16);
+                    doc.text("MUSIC & ARTS", 14, 18);
+                }
+            } catch(e) {
+                doc.setTextColor(255, 255, 255);
+                doc.setFont("Helvetica", "bold");
+                doc.setFontSize(16);
+                doc.text("MUSIC & ARTS", 14, 18);
+            }
+
             doc.setTextColor(255, 255, 255);
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(18);
-            doc.text("CUSTOMER PRICE QUOTE", 14, 18);
-
             doc.setFontSize(10);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 170, 18, { align: "right" });
+            doc.text(`Customer Quote | Date: ${new Date().toLocaleDateString()}`, 196, 18, { align: "right" });
 
-            // Customer & Salesperson Info Block
             doc.setTextColor(30, 41, 59);
             doc.setFontSize(10);
             let yPos = 38;
-            doc.text(`Customer Name: ${custName}`, 14, yPos);
+            doc.text(`Customer: ${custName}`, 14, yPos);
             doc.text(`Salesperson: ${salesperson}`, 120, yPos);
             yPos += 6;
             doc.text(`Phone: ${custPhone}`, 14, yPos);
@@ -1563,7 +1656,6 @@
             doc.text(`Quote Expiration: ${expireDate}`, 14, yPos);
             yPos += 10;
 
-            // Line items table header
             doc.setFillColor(241, 245, 249);
             doc.rect(14, yPos, 182, 8, "F");
             doc.setFont("Helvetica", "bold");
@@ -1573,15 +1665,14 @@
 
             doc.setFont("Helvetica", "normal");
 
-            // Main Product
             let mainDesc = `${activeLookupItem.desc} (${selectedPriceType === 'edlp' ? 'StorEDLP' : 'Sell Price'})`;
             doc.text(activeLookupItem.sku, 18, yPos);
-            doc.text(mainDesc.substring(0, 60), 45, yPos);
+            doc.text(mainDesc.substring(0, 58), 45, yPos);
             doc.text(`$${originalBasePrice.toFixed(2)}`, 185, yPos, { align: "right" });
             yPos += 8;
 
             if (useDiscount) {
-                doc.setTextColor(16, 185, 129);
+                doc.setTextColor(139, 37, 0);
                 doc.text("DISCOUNT", 18, yPos);
                 doc.text(`${currentDiscountPercent}% Promotional Discount Applied`, 45, yPos);
                 let discountAmount = originalBasePrice * (currentDiscountPercent / 100);
@@ -1591,7 +1682,7 @@
             }
 
             if (useEquity && equityVal > 0) {
-                doc.setTextColor(16, 185, 129);
+                doc.setTextColor(139, 37, 0);
                 doc.text("EQUITY", 18, yPos);
                 doc.text("Rental Equity Applied Toward Purchase", 45, yPos);
                 doc.text(`-$${equityVal.toFixed(2)}`, 185, yPos, { align: "right" });
@@ -1599,7 +1690,6 @@
                 yPos += 8;
             }
 
-            // Coverage Plan
             if (useSoundcare && coverageCost > 0) {
                 let planName = currentSoundcareTerm === 'ima' ? '2-Year IMA Contract' : `${currentSoundcareTerm}-Year SoundCare Coverage`;
                 doc.text(coverageSkuCode, 18, yPos);
@@ -1608,10 +1698,9 @@
                 yPos += 8;
             }
 
-            // Accessories
             selectedAccessories.forEach(acc => {
                 doc.text(acc.sku, 18, yPos);
-                doc.text(acc.name.substring(0, 60), 45, yPos);
+                doc.text(acc.name.substring(0, 58), 45, yPos);
                 doc.text(`$${acc.price.toFixed(2)}`, 185, yPos, { align: "right" });
                 yPos += 8;
             });
@@ -1621,7 +1710,6 @@
             doc.line(14, yPos, 196, yPos);
             yPos += 8;
 
-            // Summary Totals
             let subtotalAll = adjustedSubtotal + coverageCost + accessoriesTotal;
             let totalTaxAll = taxAmount + coverageTax + accessoriesTax;
 
@@ -1642,18 +1730,22 @@
             if (document.getElementById('chk-financing').checked && finalTotal > 299.99) {
                 let monthlyPmt = finalTotal / currentFinancingMonths;
                 doc.setFontSize(10);
-                doc.setTextColor(16, 185, 129);
+                doc.setTextColor(139, 37, 0);
                 doc.text(`Or Financing: ${currentFinancingMonths} monthly installments of $${monthlyPmt.toFixed(2)} / mo`, 14, yPos);
                 doc.setTextColor(30, 41, 59);
                 yPos += 10;
             }
 
-            // Notes Section
             doc.setFontSize(9);
             doc.setFont("Helvetica", "normal");
-            doc.text("Notes / Memo:", 14, yPos);
+            doc.text("Notes:", 14, yPos);
             yPos += 5;
             doc.text(notes, 14, yPos, { maxWidth: 180 });
+            yPos += 12;
+
+            doc.setFont("Helvetica", "bold");
+            doc.setTextColor(139, 37, 0);
+            doc.text("Ask an associate about taking a free lesson with one of our professional instructors. Lessons Open House October 24th. Sign up between now and October 10th to get HALF OFF your first month of Lessons!", 14, yPos, { maxWidth: 180 });
 
             doc.save(`Quote_${activeLookupItem.sku}_${custName.replace(/\s+/g, '_')}.pdf`);
             closeQuoteModal();
