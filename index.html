@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for professional icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS for Excel spreadsheet parsing -->
+    <!-- SheetJS for Excel spreadsheet parsing & generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- QuaggaJS for Code 128 Auto barcode scanning -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
@@ -46,15 +46,15 @@
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
-                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm">
+                <button id="nav-scanner" onclick="switchTab('scanner')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm">
                     <i class="fa-solid fa-camera"></i>
                     <span class="inline">Scanner</span>
                 </button>
-                <button id="nav-cycle" onclick="switchTab('cycle')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
+                <button id="nav-cycle" onclick="switchTab('cycle')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-clipboard-check"></i>
                     <span class="inline">Cycle Count</span>
                 </button>
-                <button id="nav-settings" onclick="switchTab('settings')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
+                <button id="nav-settings" onclick="switchTab('settings')" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-gear"></i>
                     <span class="inline">Settings</span>
                 </button>
@@ -62,7 +62,7 @@
         </div>
     </header>
 
-    <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6">
+    <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 lg:p-8">
 
         <div id="custom-alert" class="hidden mb-6 p-4 rounded-xl border flex items-start space-x-3 transition-all animate-fade-in shadow-sm">
             <div id="alert-icon-container" class="mt-0.5 text-lg"></div>
@@ -76,7 +76,7 @@
         <!-- TAB 1: SCANNER & LOOKUP -->
         <div id="tab-scanner" class="space-y-6">
             
-            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+            <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm">
                 <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Type SKU or Scan Barcode</label>
                 <div class="flex gap-2">
                     <div class="relative flex-1">
@@ -85,7 +85,7 @@
                         </span>
                         <input type="number" pattern="[0-9]*" inputmode="numeric" id="manual-sku-input" onkeydown="handleManualKeydown(event)" placeholder="Type SKU Here" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20 focus:border-rose-900 transition-all">
                     </div>
-                    <button onclick="submitManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
+                    <button onclick="submitManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-6 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
                         <span>Search</span>
                     </button>
                     <button id="toggle-camera-btn" onclick="toggleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
@@ -104,7 +104,7 @@
                 </div>
             </div>
 
-            <div id="result-card" class="hidden bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all animate-fade-in">
+            <div id="result-card" class="hidden bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-6 shadow-lg transition-all animate-fade-in">
                 <div class="flex justify-between items-start">
                     <div>
                         <span id="res-sku-label" class="text-xs font-bold px-2.5 py-1 bg-rose-100 text-rose-900 rounded-lg uppercase tracking-wider">SKU Match Found</span>
@@ -116,7 +116,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3 text-sm text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <div class="mt-3 text-sm text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
                     <span class="font-semibold text-slate-700">Description:</span> <span id="res-desc"></span>
                 </div>
 
@@ -127,7 +127,7 @@
                 <div id="res-customer-options" class="mt-5 pt-5 border-t border-slate-100 space-y-4">
                     <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Customer Options & Add-ons</h4>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
                                 <input type="checkbox" id="chk-discount" onchange="toggleDiscountWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
@@ -145,7 +145,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
                                 <input type="checkbox" id="chk-soundcare" onchange="toggleSoundcareWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 transition-all">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 transition-all">
                         <label class="flex items-center justify-between cursor-pointer select-none">
                             <div class="flex items-center space-x-3">
                                 <input type="checkbox" id="chk-financing" onchange="toggleFinancingWidget()" class="w-4 h-4 text-rose-900 rounded border-slate-300 focus:ring-rose-900">
@@ -215,9 +215,9 @@
                         <p class="text-[11px] text-rose-100">Ready to export for paper price tag audits.</p>
                     </div>
                 </div>
-                <button onclick="exportPrintlistCsv()" class="bg-white brand-red-text hover:bg-rose-50 font-bold px-4 py-2.5 rounded-xl text-xs transition-all shadow-sm flex items-center space-x-2">
+                <button onclick="exportPrintlistExcel()" class="bg-white brand-red-text hover:bg-rose-50 font-bold px-4 py-2.5 rounded-xl text-xs transition-all shadow-sm flex items-center space-x-2">
                     <i class="fa-solid fa-download"></i>
-                    <span>Export Printlist (.CSV)</span>
+                    <span>Export Printlist (.XLSX)</span>
                 </button>
             </div>
 
@@ -233,16 +233,16 @@
 
         <!-- TAB 2: CYCLE COUNT -->
         <div id="tab-cycle" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+            <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <h3 class="text-base font-bold text-slate-900">Physical Inventory Cycle Count</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs to deduct expected inventory items.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Scan barcodes or enter SKUs. Items are automatically removed when fully counted.</p>
                     </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <button onclick="exportUnscannedExcel()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center space-x-2">
+                        <button onclick="exportCycleCountExcel()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-file-excel"></i>
-                            <span>Export Remaining (.XLS)</span>
+                            <span>Export Count List (.XLSX)</span>
                         </button>
                     </div>
                 </div>
@@ -254,10 +254,10 @@
                             <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-barcode"></i>
                             </span>
-                            <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to deduct" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20 focus:border-rose-900 transition-all">
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" id="cycle-manual-sku-input" onkeydown="handleCycleManualKeydown(event)" placeholder="Type SKU to count" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-900/20 focus:border-rose-900 transition-all">
                         </div>
-                        <button onclick="submitCycleManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-5 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
-                            <span>Deduct</span>
+                        <button onclick="submitCycleManualSku()" class="brand-red hover:opacity-95 text-white font-semibold px-4 sm:px-6 py-3 rounded-xl text-sm transition-all shadow-md shadow-rose-900/20 flex items-center space-x-2 shrink-0">
+                            <span>Count</span>
                         </button>
                         <button id="cycle-toggle-camera-btn" onclick="toggleCycleCamera()" title="Scan Barcode" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold w-12 py-3 rounded-xl text-sm transition-all shadow-md flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-camera text-base"></i>
@@ -276,7 +276,7 @@
                 </div>
             </div>
 
-            <div id="cycle-qty-modal" class="hidden bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div id="cycle-qty-modal" class="hidden bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 sm:p-5 shadow-sm animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl brand-red text-white flex items-center justify-center font-bold text-lg shrink-0">
                         <i class="fa-solid fa-box"></i>
@@ -288,7 +288,7 @@
                 </div>
                 <div class="flex items-center space-x-2 w-full sm:w-auto">
                     <div class="flex-1 sm:flex-none">
-                        <label class="block text-[10px] font-bold text-rose-900 uppercase tracking-wider mb-1">Qty to Remove</label>
+                        <label id="cycle-qty-label" class="block text-[10px] font-bold text-rose-900 uppercase tracking-wider mb-1">Add to Found Qty</label>
                         <input type="number" id="cycle-deduct-qty" min="1" value="1" class="w-24 px-3 py-1.5 bg-white border border-rose-300 rounded-xl text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-rose-900">
                     </div>
                     <div class="flex items-end space-x-1 pt-5">
@@ -301,7 +301,7 @@
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                     <div class="flex items-center space-x-2">
-                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle List</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Remaining Cycle Count List</span>
                         <span id="cycle-count-badge" class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0 Items</span>
                     </div>
                     <div id="cycle-active-category-badge" class="text-[10px] font-semibold brand-red-text bg-rose-100 px-2.5 py-1 rounded-lg">All Categories</div>
@@ -310,14 +310,15 @@
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="bg-slate-100/70 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
-                                <th class="p-3">Variant Number (SKU)</th>
+                                <th class="p-3">SKU</th>
                                 <th class="p-3">Item Description</th>
-                                <th class="p-3 text-right">Expected Physical Inventory</th>
+                                <th class="p-3 text-right">Expected</th>
+                                <th class="p-3 text-right">Found</th>
                             </tr>
                         </thead>
                         <tbody id="cycle-table-body" class="divide-y divide-slate-100">
                             <tr>
-                                <td colspan="3" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file in settings.</td>
+                                <td colspan="4" class="p-6 text-center text-slate-400 italic">No cycle count spreadsheet loaded yet. Upload your inventory file in settings.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -327,7 +328,7 @@
 
         <!-- TAB 3: SETTINGS -->
         <div id="tab-settings" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
                 <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Application & Database Settings</h3>
                 
                 <div class="space-y-4 pb-4 border-b border-slate-100">
@@ -422,7 +423,7 @@
 
         <!-- GENERATE QUOTE MODAL -->
         <div id="quote-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in overflow-y-auto">
-            <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-5 my-8">
+            <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 my-8">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shrink-0">
@@ -504,7 +505,7 @@
     </main>
 
     <!-- Hidden Image Element for Embedding Black Music & Arts Logo in PDF -->
-    <img id="pdf-logo-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAB4CAMAAACt5V2FAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkVBMVEX////... (base64 omitted for brevity, loaded dynamically or generated via canvas)" crossorigin="anonymous" class="hidden">
+    <img id="pdf-logo-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAB4CAMAAACt5V2FAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAkVBMVEX////..." crossorigin="anonymous" class="hidden">
 
     <script>
         let productDatabase = {}; // Key: SKU string, Value: { desc, sell, edlp }
@@ -526,7 +527,7 @@
         let printlistSkus = [];
 
         // Cycle Count state variables
-        let cycleInventoryData = []; 
+        let cycleInventoryData = []; // Array of { sku, desc, expectedQty, foundQty }
         let rawCycleParsedRows = []; 
         let pendingCycleSku = null;
         let activeCycleCategoryFilter = 'ALL';
@@ -579,7 +580,7 @@
                 if (tabEl) tabEl.classList.add('hidden');
                 let navBtn = document.getElementById(`nav-${t}`);
                 if (navBtn) {
-                    navBtn.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900";
+                    navBtn.className = "px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 text-slate-600 hover:text-slate-900";
                 }
             });
 
@@ -587,7 +588,7 @@
             if (targetTab) targetTab.classList.remove('hidden');
             let activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) {
-                activeNav.className = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm";
+                activeNav.className = "px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 bg-white brand-red-text shadow-sm";
             }
 
             if (tabId !== 'scanner' && isCameraActive) {
@@ -667,8 +668,8 @@
             let sampleRow = rows[0];
             let keys = Object.keys(sampleRow);
             
-            let skuKey = keys.find(k => k.trim().toLowerCase() === 'sku');
-            let descKey = keys.find(k => ['prod desc', 'brand model', 'description', 'product description', 'item description'].includes(k.trim().toLowerCase()));
+            let skuKey = keys.find(k => k.trim().toLowerCase() === 'sku' || k.trim().toLowerCase() === 'variant number');
+            let descKey = keys.find(k => ['prod desc', 'brand model', 'description', 'product description', 'item description', 'product name'].includes(k.trim().toLowerCase()));
             let sellKey = keys.find(k => ['sell', 'selling price', 'price'].includes(k.trim().toLowerCase()));
             let edlpKey = keys.find(k => ['storedlp', 'edlp', 'store edlp'].includes(k.trim().toLowerCase()));
 
@@ -775,6 +776,7 @@
                     sku: skuVal,
                     desc: descVal,
                     expectedQty: qtyVal,
+                    foundQty: 0, // Default to 0 until physically counted / scanned
                     group: groupVal
                 };
 
@@ -808,20 +810,25 @@
             const badge = document.getElementById('cycle-count-badge');
             tbody.innerHTML = "";
 
-            let activeItems = cycleInventoryData.filter(item => item.expectedQty > 0);
-            badge.innerText = `${activeItems.length} Items`;
+            badge.innerText = `${cycleInventoryData.length} Items`;
 
-            if (activeItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-400 italic">All items accounted for or no cycle count list loaded.</td></tr>`;
+            if (cycleInventoryData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No cycle count items remaining. All items counted!</td></tr>`;
                 return;
             }
 
-            activeItems.forEach(item => {
+            cycleInventoryData.forEach(item => {
+                let isVariance = item.expectedQty === 0;
+                let rowBgClass = isVariance ? 'bg-amber-50/60' : 'hover:bg-slate-50';
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-all">
-                        <td class="p-3 font-mono font-bold text-slate-900">${escapeHtml(item.sku)}</td>
+                    <tr class="${rowBgClass} transition-all">
+                        <td class="p-3 font-mono font-bold text-slate-900 flex items-center space-x-1.5">
+                            <span>${escapeHtml(item.sku)}</span>
+                            ${isVariance ? '<span class="text-[9px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-semibold">Positive Variance</span>' : ''}
+                        </td>
                         <td class="p-3 text-slate-600">${escapeHtml(item.desc)}</td>
-                        <td class="p-3 text-right font-bold text-slate-800">${item.expectedQty}</td>
+                        <td class="p-3 text-right font-medium text-slate-600">${item.expectedQty}</td>
+                        <td class="p-3 text-right font-bold brand-red-text">${item.foundQty}</td>
                     </tr>
                 `;
             });
@@ -905,28 +912,49 @@
         }
 
         function processScannedCycleSku(sku) {
-            let found = cycleInventoryData.find(item => item.sku === sku && item.expectedQty > 0);
+            let found = cycleInventoryData.find(item => item.sku === sku);
+            
             if (!found) {
-                alertBox(`SKU ${sku} not found in remaining cycle list or expected quantity is 0.`, "SKU Not Found", true);
-                return;
+                let dbItem = productDatabase[sku];
+                let desc = dbItem ? dbItem.desc : "Unregistered Positive Variance Item";
+                
+                found = {
+                    sku: sku,
+                    desc: desc,
+                    expectedQty: 0,
+                    foundQty: 0,
+                    group: activeCycleCategoryFilter
+                };
+                cycleInventoryData.push(found);
+                alertBox(`SKU ${sku} not in cycle count list. Added as a positive variance item!`, "Positive Variance");
             }
 
             pendingCycleSku = sku;
             document.getElementById('cycle-prompt-sku').innerText = `SKU: ${sku}`;
             document.getElementById('cycle-prompt-desc').innerText = found.desc;
-            document.getElementById('cycle-deduct-qty').value = found.expectedQty;
+            
+            // Default qty found widget to the difference between expectedQty and foundQty
+            let remainingDiff = Math.max(1, found.expectedQty - found.foundQty);
+            document.getElementById('cycle-deduct-qty').value = remainingDiff;
+            
             document.getElementById('cycle-qty-modal').classList.remove('hidden');
             document.getElementById('cycle-deduct-qty').focus();
         }
 
         function confirmCycleDeduction() {
             if (!pendingCycleSku) return;
-            let qtyToRemove = parseFloat(document.getElementById('cycle-deduct-qty').value);
-            if (isNaN(qtyToRemove) || qtyToRemove <= 0) qtyToRemove = 1;
+            let qtyInput = parseFloat(document.getElementById('cycle-deduct-qty').value);
+            if (isNaN(qtyInput) || qtyInput < 0) qtyInput = 0;
 
-            let item = cycleInventoryData.find(i => i.sku === pendingCycleSku);
-            if (item) {
-                item.expectedQty = Math.max(0, item.expectedQty - qtyToRemove);
+            let itemIndex = cycleInventoryData.findIndex(i => i.sku === pendingCycleSku);
+            if (itemIndex !== -1) {
+                let item = cycleInventoryData[itemIndex];
+                item.foundQty += qtyInput;
+
+                // Check if foundQty meets or exceeds expectedQty (for expected items with expectedQty > 0)
+                if (item.expectedQty > 0 && item.foundQty >= item.expectedQty) {
+                    cycleInventoryData.splice(itemIndex, 1);
+                }
             }
 
             cancelCycleDeduction();
@@ -938,29 +966,27 @@
             document.getElementById('cycle-qty-modal').classList.add('hidden');
         }
 
-        function exportUnscannedExcel() {
+        function exportCycleCountExcel() {
             if (cycleInventoryData.length === 0) {
                 alertBox("No cycle count data available to export.", "Export Error", true);
                 return;
             }
 
-            let activeItems = cycleInventoryData.filter(i => i.expectedQty > 0);
-            if (activeItems.length === 0) {
-                alertBox("All items have been fully accounted for! No remaining unscanned items.", "Complete");
-                return;
-            }
-
-            let exportRows = activeItems.map(i => ({
-                "variant number": i.sku,
-                "description": i.desc,
-                "physical inventory": i.expectedQty
+            // Exact inventory control team submission spreadsheet format (.xlsx):
+            // Column 1: SKU, Column 2: Item Description, Column 3: "Cycle Count", Column 4: Original Expected Qty, Column 5: Physical Found Qty
+            let exportRows = cycleInventoryData.map(i => ({
+                "SKU": i.sku,
+                "Item Description": i.desc,
+                "Reason": "Cycle Count",
+                "AX Physical Inventory": i.expectedQty,
+                "On Hand in Store": i.foundQty
             }));
 
             let worksheet = XLSX.utils.json_to_sheet(exportRows);
             let workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Remaining Unscanned");
-            XLSX.writeFile(workbook, "Remaining_Unscanned_Inventory.xlsx");
-            alertBox("Remaining unscanned items successfully exported to Excel (.xlsx)!", "Export Successful");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Cycle Count Submission");
+            XLSX.writeFile(workbook, "Cycle_Count_Submission.xlsx");
+            alertBox("Cycle count submission list successfully exported to Excel (.xlsx)!", "Export Successful");
         }
 
         function escapeHtml(text) {
@@ -1012,7 +1038,7 @@
                 activeLookupItem = { sku: cleanSku, ...item };
                 document.getElementById('res-sku-label').innerText = `SKU MATCH FOUND`;
                 document.getElementById('res-desc').innerText = item.desc;
-                card.className = "bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all transform animate-fade-in";
+                card.className = "bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-6 shadow-lg transition-all transform animate-fade-in";
 
                 let hasPrices = false;
                 if (item.sell !== "N/A" && item.sell !== "") {
@@ -1086,7 +1112,7 @@
                 activeLookupItem = null;
                 document.getElementById('res-sku-label').innerText = `SKU NOT FOUND`;
                 document.getElementById('res-desc').innerText = "No description available in uploaded sheets";
-                card.className = "bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-5 shadow-lg transition-all transform animate-fade-in";
+                card.className = "bg-white border-2 border-rose-200 rounded-2xl p-4 sm:p-6 shadow-lg transition-all transform animate-fade-in";
                 pricesGrid.innerHTML = `<div class="col-span-2 text-sm text-rose-600 font-semibold text-center py-2">SKU <code>${escapeHtml(cleanSku)}</code> was not found in the loaded spreadsheets.</div>`;
                 customerOptions.classList.add('hidden');
             }
@@ -1116,18 +1142,17 @@
             }
         }
 
-        function exportPrintlistCsv() {
+        function exportPrintlistExcel() {
             if (printlistSkus.length === 0) return;
-            let csvContent = "SKU\n" + printlistSkus.join("\n");
-            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            let url = URL.createObjectURL(blob);
-            let link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Printlist_${new Date().toISOString().slice(0, 10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            alertBox(`Successfully exported printlist with ${printlistSkus.length} SKUs!`, "Export Complete");
+            
+            // Format as single column .xlsx for easy copying into spreadsheets
+            let exportRows = printlistSkus.map(sku => ({ "SKU": sku }));
+            let worksheet = XLSX.utils.json_to_sheet(exportRows);
+            let workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Printlist");
+            XLSX.writeFile(workbook, `Printlist_${new Date().toISOString().slice(0, 10)}.xlsx`);
+            
+            alertBox(`Successfully exported printlist with ${printlistSkus.length} SKUs to Excel (.xlsx)!`, "Export Complete");
         }
 
         function selectPriceType(type) {
@@ -1745,7 +1770,7 @@
 
             doc.setFont("Helvetica", "bold");
             doc.setTextColor(139, 37, 0);
-            doc.text("Ask an associate about taking a free lesson with one of our professional instructors. Lessons Open House October 24th. Sign up between now and October 10th to get HALF OFF your first month of Lessons!", 14, yPos, { maxWidth: 180 });
+            doc.text("Ask an associate about taking a free lesson with one of our professional instructors. Sign up between now and October 10th to get HALF OFF your first month of Lessons!", 14, yPos, { maxWidth: 180 });
 
             doc.save(`Quote_${activeLookupItem.sku}_${custName.replace(/\s+/g, '_')}.pdf`);
             closeQuoteModal();
